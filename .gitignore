@@ -1,1 +1,4 @@
 ﻿node_modules/
+
+dist/*
+dist/application.bundle.js
