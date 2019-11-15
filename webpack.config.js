@@ -1,12 +1,17 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
     mode: "development",
+    devtool: "source-map",
+    resolve: {
+        extensions: [".ts",".tsx", '.js', '.jsx']
+    },
     entry: {
-        introduction: "./src/intro.js",
-        application: "./src/index.js",
+        introduction: "./src/intro.ts",
+        application: "./src/index.tsx",
     },
     output: {
         filename: '[name].bundle.js',
@@ -16,14 +21,28 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Output Management',
         }),
-        new CleanWebpackPlugin()
+        new CleanWebpackPlugin(),
+        new ForkTsCheckerWebpackPlugin({
+            tslint: true
+        }),
     ],
     module: {
         rules: [
             {
-                test: /\.js($|x$)/,
+                test: /\.(ts|js)x?$/,
                 exclude: /node_modules/,
-                use: ["babel-loader"]
+                use: {
+                    loader: 'babel-loader'
+                },
+            },
+            {
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader']
+            },
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                loader: "source-map-loader"
             }
         ]
     }
