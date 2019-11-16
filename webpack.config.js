@@ -11,7 +11,7 @@ module.exports = {
         contentBase: './dist'
     },
     resolve: {
-        extensions: [".ts",".tsx", '.js', '.jsx'],
+        extensions: [".ts",".tsx", '.js', '.jsx', '.css'],
         alias: {
             Common: path.resolve(__dirname, './src/Common'),
             Main: path.resolve(__dirname, './src/Main'),

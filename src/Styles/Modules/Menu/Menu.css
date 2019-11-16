@@ -1,0 +1,8 @@
+.menu nav {
+    position: fixed;
+    border: 2px;
+    background-color: greenyellow;
+    bottom: 0;
+    top: 0;
+    left: 0;
+}
