@@ -4,10 +4,19 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
+    context: __dirname,
     mode: "development",
     devtool: "source-map",
+    devServer: {
+        contentBase: './dist'
+    },
     resolve: {
-        extensions: [".ts",".tsx", '.js', '.jsx']
+        extensions: [".ts",".tsx", '.js', '.jsx'],
+        alias: {
+            Common: path.resolve(__dirname, './src/Common'),
+            Main: path.resolve(__dirname, './src/Main'),
+            Modules: path.resolve(__dirname, './src/Modules')
+        }
     },
     entry: {
         introduction: "./src/intro.ts",
@@ -31,13 +40,20 @@ module.exports = {
             {
                 test: /\.(ts|js)x?$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader'
-                },
+                use: [
+                    'babel-loader',
+                    {
+                        loader: 'ts-loader',
+                        options: {
+                            transpileOnly: true,
+                            experimentalWatchApi: true,
+                        }
+                    }
+                ]
             },
             {
-            test: /\.css$/,
-            use: ['style-loader', 'css-loader']
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
             },
             {
                 enforce: "pre",

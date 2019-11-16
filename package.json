@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack --config webpack.config.js --watch",
+    "watch": "webpack --config webpack.config.js --watch",
+    "start": "webpack-dev-server --config webpack.config.js --open",
     "prod": "webpack --config webpack.config.prod.js"
   },
   "repository": {
@@ -42,13 +43,15 @@
     "tslint": "^5.20.1",
     "typescript": "^3.7.2",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-router-dom": "^5.1.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-router-dom": "^5.1.2",
-    "@types/react": "^16.9.11",
-    "@types/react-dom": "^16.9.4"
+    "react-router-dom": "^5.1.2"
   }
 }
