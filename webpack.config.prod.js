@@ -60,5 +60,11 @@ module.exports = {
             useTypescriptIncrementalApi: true,
             memoryLimit: 4096
         }),
-    ]
+    ],
+    resolve: {
+        alias: {
+            Common: path.resolve(__dirname, './src/Common/'),
+            Main: path.resolve(__dirname, './src/Main/')
+        }
+    }
 }
