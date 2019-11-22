@@ -3,6 +3,8 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {NavLinks} from './NavLinks';
 import {RouterSwitch} from './RouterSwitch';
 import '../../../Styles/Modules/Menu/Menu.css'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCompass} from '@fortawesome/free-solid-svg-icons'
 
 /**
  * Модель собственных свойств компонента.
@@ -32,20 +34,30 @@ export class Menu extends React.PureComponent<IOwnProps, IState> {
     /**
      * Обработчик открытия меню.
      */
-    handleOpenMenu() {
+    handleOpenMenu = () => {
         this.setState({isMenuShown: true});
     }
 
     render () {
+        const {isMenuShown} = this.state;
+
         return (
             <div className="menu">
-                <Router>
-                    <React.Fragment>
-                        <NavLinks />
+                <FontAwesomeIcon
+                    className="menu-icon"
+                    icon={faCompass}
+                    onClick={this.handleOpenMenu}
+                />
 
-                        <RouterSwitch/>
-                    </React.Fragment>
-                </Router>
+                {isMenuShown && (
+                    <Router>
+                        <React.Fragment>
+                            <NavLinks />
+
+                            <RouterSwitch/>
+                        </React.Fragment>
+                    </Router>
+                )}
             </div>
         );
     }

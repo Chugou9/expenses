@@ -5,8 +5,21 @@
     bottom: 0;
     top: 0;
     left: 0;
-    z-index: 500;
+    z-index: 5;
     width: 64px;
+}
+
+.menu .menu-icon {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 10px 10px;
+    font-size: 24px;
+    transition: transform 2s;
+}
+
+.menu .menu-icon:hover {
+    transform: rotate(90deg);
 }
 
 .menu ul {
