@@ -13,9 +13,13 @@ interface IOwnProps {}
 
 /**
  * Модель состояния компонента.
+ *
+ * @param {boolean} isMenuShown Флаг, который показывает, открыто ли меню.
+ * @param {string} [menuClassname] Класс для управления отображением меню.
  */
 interface IState {
     isMenuShown: boolean;
+    menuClassname?: string;
 }
 
 /**
@@ -27,7 +31,8 @@ export class Menu extends React.PureComponent<IOwnProps, IState> {
         super(props);
 
         this.state = {
-            isMenuShown: false
+            isMenuShown: false,
+            menuClassname: 'hidden'
         };
     }
 
@@ -35,8 +40,14 @@ export class Menu extends React.PureComponent<IOwnProps, IState> {
      * Обработчик открытия меню.
      */
     handleOpenMenu = () => {
-        this.setState({isMenuShown: true});
-    }
+        this.setState({
+            isMenuShown: true
+        }, () => setTimeout(
+                () => this.setState({isMenuShown: false}),
+                5000
+            )
+        );
+    };
 
     render () {
         const {isMenuShown} = this.state;
@@ -49,10 +60,10 @@ export class Menu extends React.PureComponent<IOwnProps, IState> {
                     onClick={this.handleOpenMenu}
                 />
 
-                {isMenuShown && (
+                {(
                     <Router>
                         <React.Fragment>
-                            <NavLinks />
+                            <NavLinks className={isMenuShown ? 'menu-expanding' : 'menu-collapsing'}/>
 
                             <RouterSwitch/>
                         </React.Fragment>

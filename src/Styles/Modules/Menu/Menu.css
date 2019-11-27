@@ -4,9 +4,11 @@
     background-color: #4CAF50;
     bottom: 0;
     top: 0;
-    left: 0;
+    left: -64px;
     z-index: 5;
     width: 64px;
+    transition-property: transform;
+    transition-duration: 1s;
 }
 
 .menu .menu-icon {
@@ -15,17 +17,30 @@
     left: 0;
     padding: 10px 10px;
     font-size: 24px;
-    transition: transform 2s;
+    transition: transform 3s;
 }
 
 .menu .menu-icon:hover {
     transform: rotate(90deg);
 }
 
+.menu nav:hover {
+    transform: translate(64px);
+}
+
 .menu ul {
     list-style-type: none;
     margin-top: 0;
     padding-left: 0;
+}
+
+.menu-expanding {
+    transform: translateX(64px);
+    visibility: visible !important;
+}
+
+.menu-collapsing {
+    transform: translateX(-6px);
 }
 
 .background-ligth-green {
