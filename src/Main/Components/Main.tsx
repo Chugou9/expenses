@@ -13,7 +13,6 @@ export class Main extends React.PureComponent<IOwnProps, {}> {
     render() {
         return (
             <React.Fragment>
-                <p>Главная страниц</p>
                 <Menu />
             </React.Fragment>
         );
