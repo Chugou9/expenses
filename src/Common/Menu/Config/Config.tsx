@@ -1,7 +1,7 @@
 import {ROUTES} from "../Consts";
 import * as React from 'react';
 import {ExpensesPage} from "Modules/Expenses/Pages/ExpensesPage";
-import {PublicUtilityPaymentsPage} from 'Modules/PublicUtilityPayments/Pages/PublicUtilityPaymentsPage'
+import {PublicUtilityPaymentsPage} from 'Modules/PublicUtilityPayments/Pages/PublicUtilityPaymentsPage';
 import {faWallet, faBolt} from '@fortawesome/free-solid-svg-icons';
 
 /**

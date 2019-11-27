@@ -10,12 +10,20 @@ interface IOwnProps {}
  */
 interface IState {}
 
+/**
+ * Форма с расходами.
+ */
 export class ExpensesForm extends React.PureComponent<IOwnProps, IState> {
+
     render() {
         return (
-            <div>
-                <div>
-                    <table></table>
+            <div className="form-horizontal">
+                <div className="col-xs-6">
+                    
+                </div>
+
+                <div className="col-xs-6">
+                    Graph
                 </div>
             </div>
         );

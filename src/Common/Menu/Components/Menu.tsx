@@ -2,9 +2,8 @@ import * as React from 'react';
 import {BrowserRouter as Router} from 'react-router-dom';
 import {NavLinks} from './NavLinks';
 import {RouterSwitch} from './RouterSwitch';
-import '../../../Styles/Modules/Menu/Menu.css'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCompass} from '@fortawesome/free-solid-svg-icons'
+import {faCompass} from '@fortawesome/free-solid-svg-icons';
 
 /**
  * Модель собственных свойств компонента.
@@ -55,7 +54,7 @@ export class Menu extends React.PureComponent<IOwnProps, IState> {
         return (
             <div className="menu">
                 <FontAwesomeIcon
-                    className="menu-icon"
+                    className="menu-icon fa-sm"
                     icon={faCompass}
                     onClick={this.handleOpenMenu}
                 />

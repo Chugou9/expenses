@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     context: __dirname,
@@ -11,7 +12,7 @@ module.exports = {
         contentBase: './dist'
     },
     resolve: {
-        extensions: [".ts",".tsx", '.js', '.jsx', '.css'],
+        extensions: [".ts",".tsx", '.js', '.jsx', '.css', '.less'],
         alias: {
             Common: path.resolve(__dirname, './src/Common'),
             Main: path.resolve(__dirname, './src/Main'),
@@ -59,7 +60,33 @@ module.exports = {
                 enforce: "pre",
                 test: /\.js$/,
                 loader: "source-map-loader"
-            }
+            },
+            {
+                test: /\.less$/,
+                use: [
+                  {
+                    loader: 'style-loader', // creates style nodes from JS strings
+                  },
+                  {
+                    loader: 'css-loader', // translates CSS into CommonJS
+                  },
+                  {
+                    loader: 'less-loader', // compiles Less to CSS
+                  },
+                ],
+              },
+              {
+                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                use: [
+                  {
+                    loader: 'file-loader',
+                    options: {
+                      name: '[name].[ext]',
+                      outputPath: 'fonts/'
+                    }
+                  }
+                ]
+              }
         ]
     }
 };
