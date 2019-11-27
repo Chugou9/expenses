@@ -3,3 +3,7 @@ a {
     cursor: pointer;
     marker: none;
 }
+
+.hidden {
+    visibility: hidden;
+}

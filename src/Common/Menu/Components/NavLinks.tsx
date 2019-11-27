@@ -5,8 +5,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 /**
  * Модель собственных свойств компонента.
+ *
+ * @prop {string} [className] Кастомный класс.
  */
-interface IOwnProps {}
+interface IOwnProps {
+    className?: string;
+}
 
 /**
  * Модель состояния компонента.
@@ -19,8 +23,10 @@ interface IState {}
 export class NavLinks extends React.PureComponent<IOwnProps, IState> {
 
     render() {
+        const {className} = this.props;
+
         return (
-            <nav>
+            <nav className={className}>
                 <ul>
                     {CONFIGURATION.map((link) => (
                         <li key={link.path}>

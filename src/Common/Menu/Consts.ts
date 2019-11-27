@@ -10,4 +10,4 @@ export const ROUTES = {
         PATH: '/public-utility-payments',
         NAME: 'Коммунальные платежи'
     }
-}
+};
