@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {PublicUtilityPaymentsForm} from '../Components/PublicUtilityPaymentsForm';
 
 /**
  * Модель собственных свойств компонента.
@@ -12,7 +13,7 @@ export class PublicUtilityPaymentsPage extends React.PureComponent<IOwnProps, {}
 
     render() {
         return (
-            <p>Страница с коммунальными платежами</p>
+            <PublicUtilityPaymentsForm />
         );
     }
 }
