@@ -7,3 +7,38 @@ a {
 .hidden {
     visibility: hidden;
 }
+
+thead {
+    background-color: @color-lighter-grey;
+    border-color: @color-grey;
+    border-width: 2px;
+    border-style: solid;
+    font: italic @base*4 'Trebuchet MS', sans-serif;
+
+    tr {
+        th {
+            font-weight: 200;
+            padding: 5px 5px;
+            text-align: center;
+            border-left: 2px solid @color-grey;
+
+            &:first-child {
+                border-left: none;
+            }
+        }
+    }
+
+    .complex-column-content {
+        & th {
+            border-left: none;
+        }
+    }
+
+    .complex-column-title {
+        border-bottom: 2px solid @color-grey;
+    }
+
+    .complex-column {
+        padding: 0 0;
+    }
+}
