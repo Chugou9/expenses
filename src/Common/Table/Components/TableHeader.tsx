@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ITableColumnsConfig} from '../Models';
+import {ITableColumnsConfig, ITableComplexColumn} from '../Models';
 
 /**
  * Модель собственных свойств компонента.
@@ -34,12 +34,40 @@ export class TableHeader extends React.PureComponent<IOwnProps, IState> {
 
 
             for (let key in tableColumnsConfig) {
-                result.push(<th>{tableColumnsConfig[key]}</th>);
+                if (typeof tableColumnsConfig[key] === 'string') {
+                    result.push(<th>{tableColumnsConfig[key]}</th>);
+                } else {
+                    result.push(
+                        this.renderComplexColumn(tableColumnsConfig[key] as ITableComplexColumn)
+                    );
+                }
+
             }
         }
 
         return result;
     };
+
+    /**
+     * Рисует заголовок тематической колонки.
+     *
+     * @param {ITableComplexColumn} params Параметры тематической колонки для отрисовки.
+     */
+    renderComplexColumn = ({title, actualSum, countedSum, data}: ITableComplexColumn): JSX.Element => {
+        return (
+            <th className="complex-column">
+                <tr className="complex-column-title">
+                    <th colSpan={3}>{title}</th>
+                </tr>
+
+                <tr className="complex-column-content">
+                    <th>{actualSum}</th>
+                    <th>{countedSum}</th>
+                    {data &&<th>{data}</th>}
+                </tr>
+            </th>
+        );
+    }
 
     render() {
         return (

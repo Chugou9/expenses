@@ -6,6 +6,23 @@ import {ITableColumnsConfig} from "../../Common/Table/Models";
 export const PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS: ITableColumnsConfig = {
     number: '№ п/п',
     month: 'Месяц',
-    electricityActulalSum: 'Фактическая сумма',
-    electricityCountedSum: 'Примерная сумма'
+    electricity: {
+        title: 'Электричество',
+        actualSum: 'Фактическая сумма',
+        countedSum: 'Примерная сумма',
+        data: 'Показания счетчика'
+    },
+    gas: {
+        title: 'Газ',
+        actualSum: 'Фактическая сумма',
+        countedSum: 'Примерная сумма',
+        data: 'Показания счетчика'
+    },
+    hus: 'ТСЖ', // housing and utility services
+    rent: 'Арендная плата',
+    sum: {
+        title: 'Сумма',
+        actualSum: 'Фактическая',
+        countedSum: 'Примерная',
+    }
 };
