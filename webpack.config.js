@@ -2,7 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     context: __dirname,
