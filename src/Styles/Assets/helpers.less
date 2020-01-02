@@ -3,19 +3,19 @@
 
 .generate-margins(@n, @i: 1) when (@i <= @n) {
     .mt-@{i} {
-        margin-top: (@n * @base); 
+        margin-top: @i * @base; 
     }
 
     .mb-@{i} {
-        margin-bottom: @n * @base;
+        margin-bottom: @i * @base;
     }
 
     .mr-@{i} {
-        margin-right: (@n * @base); 
+        margin-right: @i * @base; 
     }
 
     .ml-@{i} {
-        margin-left: (@n * @base); 
+        margin-left: @i * @base; 
     }
 
     .generate-margins(@n, @i + 1);

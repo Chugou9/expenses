@@ -7,6 +7,7 @@ import {IComplexFieldToRender, IFormFieldToRender} from 'Models/FormModels';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faPencilAlt, faCheck} from '@fortawesome/free-solid-svg-icons';
 import {IPublicUtilityMonthPayments} from 'Models/PublicUtilityPayments';
+import {FormGroup} from 'Common/BuildingBlocks/FormGroup/FormGroup';
 /**
  * Модель собственных свойств компонента.
  */
@@ -56,13 +57,13 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
 
         function renderSimple(label: string, placeholder: string) {
             return (
-                <div className="form-group">
-                    <label className="control-label col-xs-4">{label}</label>
-
-                    <div className="col-xs-8">
-                        <input className="form-control" placeholder={placeholder}/>
-                    </div>
-                </div>
+                <FormGroup
+                    label={label}
+                    labelClassName="col-xs-4"
+                    elementClassName="col-xs-8"
+                >
+                    <input className="form-control" placeholder={placeholder}/>
+                </FormGroup>
             );
         }
 
@@ -159,7 +160,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                     {showEditFieldsModal && (
                         <ModalWindow
                             title={this.renderEditModalTitle()}
-                            className="form-horizontal modal-400"
+                            className="form-horizontal modal-500"
                             body={this.renderFields()}
                         />
                     )}

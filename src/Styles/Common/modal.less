@@ -4,16 +4,22 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    min-width: @base * 100;
+
+    &-title-container {
+        margin-bottom: @base * 2;
+        border-bottom: 2px orange solid;
+    }
 
     &-title {
         font: normal @base*6 'Trebuchet MS', sans-serif !important;
-        border-bottom: 2px orange solid;
-        margin-bottom: @base * 2;
     }
-
-    min-width: @base * 100;
 }
 
 .modal-400 {
     width: @base * 100;
+}
+
+.modal-500 {
+    width: @base * 125;
 }
