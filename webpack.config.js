@@ -2,7 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     context: __dirname,
@@ -16,7 +15,8 @@ module.exports = {
         alias: {
             Common: path.resolve(__dirname, './src/Common'),
             Main: path.resolve(__dirname, './src/Main'),
-            Modules: path.resolve(__dirname, './src/Modules')
+            Modules: path.resolve(__dirname, './src/Modules'),
+            Models: path.resolve(__dirname, './src/Models')
         }
     },
     entry: {

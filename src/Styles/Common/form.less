@@ -42,3 +42,30 @@ thead {
         padding: 0 0;
     }
 }
+
+.layout-block {
+    margin: @base*3;
+    background-color: @color-white;
+    border: 1px solid @color-grey;
+}
+
+.form-horizontal {
+    padding: @base*3;
+    padding-left: @base*3;
+    padding-right: @base*3;
+    font: italic @base*4 'Trebuchet MS', sans-serif !important;
+
+    .form-title-container{
+        width: 100%;
+        border-bottom: @base solid orange;
+        display: block;
+
+        .form-title {
+            font: normal @base*6 'Trebuchet MS', sans-serif !important;
+        }
+
+        .form-title-action-container {
+            float: right;
+        }
+    }
+}
