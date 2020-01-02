@@ -12,9 +12,7 @@ interface IOwnProps {
 /**
  * Модель состояния компонента.
  */
-interface IState {
-
-}
+interface IState {}
 
 /**
  * Компонент, содержащий основной контент.

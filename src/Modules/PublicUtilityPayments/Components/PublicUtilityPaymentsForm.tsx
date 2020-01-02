@@ -1,11 +1,12 @@
 import * as React from 'react';
 import {Table} from 'Common/Table/Components/Table';
+import {ModalWindow} from 'Common/ModalWindow/ModalWindow';
 import {LayoutBlock} from 'Common/Layout/Components/LayoutBlock'
 import {PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS, PublicUtilityPaymentsFormFields} from '../Consts';
 import {IComplexFieldToRender, IFormFieldToRender} from 'Models/FormModels';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPencilAlt} from '@fortawesome/free-solid-svg-icons';
-
+import {faPencilAlt, faCheck} from '@fortawesome/free-solid-svg-icons';
+import {IPublicUtilityMonthPayments} from 'Models/PublicUtilityPayments';
 /**
  * Модель собственных свойств компонента.
  */
@@ -15,9 +16,11 @@ interface IOwnProps {}
  * Модель состояния компонента.
  *
  * @prop {boolean} showEditFieldsModal Флаг, который показывает, нужно ли отображать форму редактирования полей.
+ * @prop {IPublicUtilityMonthPayments} currentMonthUtilityPayments Данные о коммунальных платежах за текущий месяц.
  */
 interface IState {
     showEditFieldsModal: boolean;
+    currentMonthUtilityPayments: IPublicUtilityMonthPayments;
 }
 
 /**
@@ -28,7 +31,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
     constructor(props: IOwnProps) {
         super(props);
 
-        this.state = {showEditFieldsModal: false};
+        this.state = {showEditFieldsModal: false, currentMonthUtilityPayments: {}};
     }
 
     /**
@@ -36,6 +39,13 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
      */
     handleOpenEditModal = () => {
         this.setState({showEditFieldsModal: true});
+    };
+
+    /**
+     * Обработчик сохранения данных текущего месяца.
+     */
+    handleSave = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => (currentMonthUtilityPayments: IPublicUtilityMonthPayments) => {
+        this.setState({currentMonthUtilityPayments});
     };
 
     /**
@@ -47,9 +57,9 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
         function renderSimple(label: string, placeholder: string) {
             return (
                 <div className="form-group">
-                    <label className="control-label col-xs-2">{label}</label>
+                    <label className="control-label col-xs-4">{label}</label>
 
-                    <div className="col-xs-10">
+                    <div className="col-xs-8">
                         <input className="form-control" placeholder={placeholder}/>
                     </div>
                 </div>
@@ -63,9 +73,9 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                         if (key === 'subheader') {
                             return (
                                 <React.Fragment>
-                                    <span>{complexObject.subheader}</span>
-
                                     <hr className="dashed" />
+        
+                                    <span>{complexObject.subheader}</span>
                                 </React.Fragment>
                             )
                         } else {
@@ -86,8 +96,30 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             }
         });
 
-        return result;
+        return <React.Fragment>{result}</React.Fragment>;
     };
+
+    /**
+     * Отрисовывает заголовок модального окна.
+     */
+    renderEditModalTitle = () => {
+        return <label>Редактирование коммунальных расходов текущего месяца</label>
+    }
+
+    renderEditModalFooter = () => {
+        return (
+            <React.Fragment>
+                <button
+                    title={"Сохранить"}
+                    className="btn btn-success"
+                    onClick={this.handleSave}
+                >
+                    <FontAwesomeIcon icon={faCheck}/>
+                    <span>Сохранить</span>
+                </button>
+            </React.Fragment>
+        );
+    }
 
     render() {
         const {showEditFieldsModal} = this.state;
@@ -125,11 +157,11 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                     </div>
 
                     {showEditFieldsModal && (
-                        <LayoutBlock
-                            className="col-xs-5 mr-2"
-                        >
-                            {this.renderFields()}
-                        </LayoutBlock>
+                        <ModalWindow
+                            title={this.renderEditModalTitle()}
+                            className="form-horizontal modal-400"
+                            body={this.renderFields()}
+                        />
                     )}
                 </div>
             </LayoutBlock>
