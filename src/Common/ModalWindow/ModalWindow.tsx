@@ -62,7 +62,7 @@ export class ModalWindow extends React.PureComponent<IOwnProps, IState> {
                     {body}
                 </div>
 
-                <div className="modal-window-footer">
+                <div className="modal-window-footer text-right">
                     {footer}
                 </div>
             </LayoutBlock>

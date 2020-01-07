@@ -8,6 +8,10 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faPencilAlt, faCheck} from '@fortawesome/free-solid-svg-icons';
 import {IPublicUtilityMonthPayments} from 'Models/PublicUtilityPayments';
 import {FormGroup} from 'Common/BuildingBlocks/FormGroup/FormGroup';
+import {PublicUtilityPaymentsServices} from '../Services/PublicUtilityPaymentsServices';
+
+const services = new PublicUtilityPaymentsServices();
+
 /**
  * Модель собственных свойств компонента.
  */
@@ -43,26 +47,61 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
     };
 
     /**
+     * Обработчик закрытия модального окна редактирования полей.
+     */
+    handleCloseEditModal = () => {
+        this.setState({showEditFieldsModal: false});
+    };
+
+    /**
+     * Обработчик изменения полей модального окна.
+     *
+     * @param {keyof IPublicUtilityMonthPayments} field Наименование поля.
+     */
+    handleEditModalChangeField = (field: keyof IPublicUtilityMonthPayments) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {currentMonthUtilityPayments} = this.state;
+        
+        currentMonthUtilityPayments[field] = event.currentTarget.value;
+  
+        this.setState({currentMonthUtilityPayments});
+    };
+
+    /**
      * Обработчик сохранения данных текущего месяца.
      */
-    handleSave = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => (currentMonthUtilityPayments: IPublicUtilityMonthPayments) => {
-        this.setState({currentMonthUtilityPayments});
+    handleSave = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        const {currentMonthUtilityPayments} = this.state;
+        const {saveNewPublicUtilityPayments} = services;
+        
+        saveNewPublicUtilityPayments(currentMonthUtilityPayments).then(
+            (value: any) => {
+                console.log(value);
+                this.handleCloseEditModal();
+            },
+            (error) => console.log(error)
+        );
     };
 
     /**
      * Рисует поля формы.
      */
     renderFields = () => {
+        const {currentMonthUtilityPayments} = this.state;
         const result: JSX.Element[] = [];
 
-        function renderSimple(label: string, placeholder: string) {
+        const renderSimple = (label: string, placeholder: string, field: string) => {
             return (
                 <FormGroup
                     label={label}
                     labelClassName="col-xs-4"
                     elementClassName="col-xs-8"
                 >
-                    <input className="form-control" placeholder={placeholder}/>
+                    <input
+                        className="form-control"
+                        placeholder={placeholder}
+                        value={currentMonthUtilityPayments[field] as any}
+                        onChange={this.handleEditModalChangeField(field)}
+                    />
                 </FormGroup>
             );
         }
@@ -82,7 +121,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                         } else {
                             const {label, placeholder} = complexObject[key] as IFormFieldToRender;
 
-                            return renderSimple(label as string, placeholder as string)
+                            return renderSimple(label as string, placeholder as string, key);
                         }
                     })}
                 </React.Fragment>
@@ -93,7 +132,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             if ('subheader' in PublicUtilityPaymentsFormFields[key]) {
                 result.push(renderComplex(PublicUtilityPaymentsFormFields[key]));
             } else {
-                result.push(renderSimple(PublicUtilityPaymentsFormFields[key].label as string, PublicUtilityPaymentsFormFields[key].placeholder as string));
+                result.push(renderSimple(PublicUtilityPaymentsFormFields[key].label as string, PublicUtilityPaymentsFormFields[key].placeholder as string, key));
             }
         });
 
@@ -162,6 +201,8 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                             title={this.renderEditModalTitle()}
                             className="form-horizontal modal-500"
                             body={this.renderFields()}
+                            onClose={this.handleCloseEditModal}
+                            footer={this.renderEditModalFooter()}
                         />
                     )}
                 </div>
