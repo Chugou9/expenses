@@ -16,7 +16,7 @@ export class Chat {
     _disconnecting: boolean = false;
     _chatSubscription: any;
     _membersSubscription: any;
-    cometdUrl: string = 'http://10.10.10.17:9080/c/cometd';
+    cometdUrl: string = 'https://10.10.10.17:9443/c/cometd';
     recieveMessage!: (message: string) => void;
 
     join = ({userName, cometdUrl, postSubscribeAction}: IJoinParams) => {
@@ -84,7 +84,6 @@ export class Chat {
         var fromUser = message.data.user;
         var membership = message.data.membership;
         var text = message.data.chat;
-        this.recieveMessage(text);
 
         if (!membership && fromUser == this._lastUser) {
             fromUser = '...';
@@ -95,11 +94,9 @@ export class Chat {
 
         if (membership) {
             this._lastUser = '';
-        } else if (message.data.scope == 'private') {
-
-        } else {
-
         }
+
+        this.recieveMessage(`${fromUser}:: ${text}`);
     };
 
     /**
@@ -110,7 +107,7 @@ export class Chat {
         console.log(message);
     };
 
-    _unsubscribe() {
+    _unsubscribe = () => {
         if (this._chatSubscription) {
             Chat._cometd.unsubscribe(this._chatSubscription);
         }
@@ -124,7 +121,7 @@ export class Chat {
         this._membersSubscription = null;
     }
 
-    _subscribe() {
+    _subscribe = () => {
         this._chatSubscription = Chat._cometd.subscribe('/chat', this.receive);
         this._membersSubscription = Chat._cometd.subscribe('/members/demo', this.members);
     }
@@ -141,7 +138,7 @@ export class Chat {
         });
     }
 
-    _connectionEstablished() {
+    _connectionEstablished = () => {
         // connection establish (maybe not for first time), so just
         // tell local user and update membership
         this.receive({
@@ -156,7 +153,7 @@ export class Chat {
         });
     }
 
-    _connectionBroken() {
+    _connectionBroken = () => {
         this.receive({
             data: {
                 user: 'system',
@@ -166,7 +163,7 @@ export class Chat {
         console.log('members are empty');
     }
 
-    _connectionClosed() {
+    _connectionClosed = () => {
         this.receive({
             data: {
                 user: 'system',
@@ -175,7 +172,7 @@ export class Chat {
         });
     }
 
-    _metaConnect(message: any) {
+    _metaConnect = (message: any) => {
         if (this._disconnecting) {
             this._connected = false;
             this._connectionClosed();
@@ -190,7 +187,7 @@ export class Chat {
         }
     }
 
-    _metaHandshake(message: any) {
+    _metaHandshake = (message: any) => {
         if (message.successful) {
             this._connectionInitialized();
         }

@@ -34,7 +34,7 @@ export class ChatForm extends React.PureComponent<IOwnProps, IState> {
             answer: [''],
             isConnected: false
         };
-        const cometdUrl = 'http://10.10.10.17:9080/c/cometd';
+        const cometdUrl = 'https://10.10.10.17:9443/c/cometd';
 
         this.state = {
             userMessage: '',
@@ -157,7 +157,7 @@ export class ChatForm extends React.PureComponent<IOwnProps, IState> {
                                     id="26_server"
                                     checked={anotherServerValue}
                                     onClick={this.handleSetAnotherServer}
-                                    title="https://10.10.10.26:9443/c/cometd"
+                                    title="http://10.10.10.17:10039/c/cometd"
                                 />
 
                                 <label htmlFor="26_server">Другой сервер</label>
