@@ -6,11 +6,10 @@ import { IAbstractFuel, IAbstractSum } from './Common';
  * @prop {number} hus Услуги ТСЖ.
  */
 export interface IPublicUtilityMonthPayments {
-    // month?: string;
-    // electrisity?: IAbstractFuel;
-    // gas?: IAbstractFuel;
-    // hus?: number;
-    // rent?: number;
-    // sum?: IAbstractSum;
-    [key: string]: string | IAbstractFuel | number | IAbstractSum;
+    month?: number;
+    electricity?: IAbstractFuel;
+    gas?: IAbstractFuel;
+    hus?: number;
+    rent?: number;
+    sum?: IAbstractSum;
 }

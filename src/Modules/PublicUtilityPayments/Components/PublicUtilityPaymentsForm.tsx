@@ -3,12 +3,13 @@ import {Table} from 'Common/Table/Components/Table';
 import {ModalWindow} from 'Common/ModalWindow/ModalWindow';
 import {LayoutBlock} from 'Common/Layout/Components/LayoutBlock'
 import {PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS, PublicUtilityPaymentsFormFields} from '../Consts';
-import {IComplexFieldToRender, IFormFieldToRender} from 'Models/FormModels';
+import {IFormFieldToRender} from 'Models/FormModels';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPencilAlt, faCheck} from '@fortawesome/free-solid-svg-icons';
+import {faPencilAlt, faCheck, faLightbulb, faFire} from '@fortawesome/free-solid-svg-icons';
 import {IPublicUtilityMonthPayments} from 'Models/PublicUtilityPayments';
 import {FormGroup} from 'Common/BuildingBlocks/FormGroup/FormGroup';
 import {PublicUtilityPaymentsServices} from '../Services/PublicUtilityPaymentsServices';
+import { IAbstractFuel, IAbstractOption } from 'Models/Common';
 
 const services = new PublicUtilityPaymentsServices();
 
@@ -40,6 +41,62 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
     }
 
     /**
+     * Возвращает опции для селекта месяца.
+     */
+    getSelectMonthOptions = (): IAbstractOption[] => {
+        return ([
+            {
+                value: 0,
+                label: 'Январь'
+            },
+            {
+                value: 1,
+                label: 'Февраль'
+            },
+            {
+                value: 2,
+                label: 'Март'
+            },
+            {
+                value: 3,
+                label: 'Апрель'
+            },
+            {
+                value: 4,
+                label: 'Май'
+            },
+            {
+                value: 5,
+                label: 'Июнь'
+            },
+            {
+                value: 6,
+                label: 'Июль'
+            },
+            {
+                value: 7,
+                label: 'Август'
+            },
+            {
+                value: 8,
+                label: 'Сентябрь'
+            },
+            {
+                value: 9,
+                label: 'Октябрь'
+            },
+            {
+                value: 10,
+                label: 'Ноябрь'
+            },
+            {
+                value: 11,
+                label: 'Декабрь'
+            }]
+        );
+    }
+
+    /**
      * Обработчик открытия модального окна редактирования полей.
      */
     handleOpenEditModal = () => {
@@ -58,12 +115,19 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
      *
      * @param {keyof IPublicUtilityMonthPayments} field Наименование поля.
      */
-    handleEditModalChangeField = (field: keyof IPublicUtilityMonthPayments) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        const {currentMonthUtilityPayments} = this.state;
-        
-        currentMonthUtilityPayments[field] = event.currentTarget.value;
-  
-        this.setState({currentMonthUtilityPayments});
+    handleEditModalChangeField = (
+        field: keyof IPublicUtilityMonthPayments
+    ) => (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const value = event.target.value;
+          
+        this.setState((prevState: IState) => ({
+            currentMonthUtilityPayments: {
+                ...prevState.currentMonthUtilityPayments,
+                [field]: value ? parseInt(value) : null
+            }
+        }));
     };
 
     /**
@@ -83,13 +147,25 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
     };
 
     /**
+     * Обрабатывает выбор месяца для редактирования данных.
+     */
+    handleSelectMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = parseInt(event.target.value);
+        const currentMonthUtilityPayments = {...this.state.currentMonthUtilityPayments};
+
+        currentMonthUtilityPayments.month = value;
+        this.setState({currentMonthUtilityPayments});
+    }
+
+    /**
      * Рисует поля формы.
      */
     renderFields = () => {
+        const {electricity, gas} = PublicUtilityPaymentsFormFields;
         const {currentMonthUtilityPayments} = this.state;
         const result: JSX.Element[] = [];
 
-        const renderSimple = (label: string, placeholder: string, field: string) => {
+        const renderSimple = (label: string, placeholder: string, field: keyof IPublicUtilityMonthPayments) => {
             return (
                 <FormGroup
                     label={label}
@@ -99,44 +175,177 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                     <input
                         className="form-control"
                         placeholder={placeholder}
-                        value={currentMonthUtilityPayments[field] as any}
+                        value={currentMonthUtilityPayments[field as keyof IPublicUtilityMonthPayments] as string | number}
                         onChange={this.handleEditModalChangeField(field)}
                     />
                 </FormGroup>
             );
+        };
+
+        const renderMonth = (label: string, placeholder: string, field: keyof IPublicUtilityMonthPayments) => {
+            const options = this.getSelectMonthOptions().map((option) => <option label={option.label} value={option.value} title={option.label}>{option.label}</option>)
+            return (
+                <FormGroup
+                    label={label}
+                    labelClassName="col-xs-4"
+                    elementClassName="col-xs-8"
+                >
+                    <select
+                        className="form-control"
+                        placeholder={placeholder}
+                        value={currentMonthUtilityPayments[field as keyof IPublicUtilityMonthPayments] as string | number}
+                        onChange={this.handleSelectMonthChange}
+                    >
+                        {options}
+                    </select>
+                </FormGroup>
+            );
         }
 
-        function renderComplex(complexObject: IComplexFieldToRender) {
-            return (
-                <React.Fragment>
-                    {complexObject && Object.keys(complexObject).map((key: string) => {
-                        if (key === 'subheader') {
-                            return (
-                                <React.Fragment>
-                                    <hr className="dashed" />
-        
-                                    <span>{complexObject.subheader}</span>
-                                </React.Fragment>
-                            )
-                        } else {
-                            const {label, placeholder} = complexObject[key] as IFormFieldToRender;
+        // Отрисовывает поля для блока "Электроэнергия".
+        const renderElectricityField = () => {
+            const {electricity: data} = currentMonthUtilityPayments;
 
-                            return renderSimple(label as string, placeholder as string, key);
-                        }
-                    })}
-                </React.Fragment>
+            return (
+                <div className="col-xs-12">
+                    <hr className="dashed" />
+
+                    <div className="col-xs-2 field-icon">
+                        <FontAwesomeIcon icon={faLightbulb} title={electricity.subheader as string}/>
+                    </div>
+
+                    <div className="col-xs-10">
+                        <FormGroup
+                            label={(electricity.actualSum as IFormFieldToRender).label}
+                            labelClassName="col-xs-4"
+                            elementClassName="col-xs-8"
+                        >
+                            <input
+                                className="form-control"
+                                placeholder={(electricity.actualSum as IFormFieldToRender).placeholder}
+                                value={data ? data.actualSum : ''}
+                                onChange={this.handleChangeFormField('electricity', 'actualSum')}
+                            />
+                        </FormGroup>
+
+                        <FormGroup
+                            label={(electricity.data as IFormFieldToRender).label}
+                            labelClassName="col-xs-4"
+                            elementClassName="col-xs-8"
+                        >
+                            <input
+                                className="form-control"
+                                placeholder={(electricity.data as IFormFieldToRender).placeholder}
+                                value={data ? data.data : ''}
+                                onChange={this.handleChangeFormField('electricity', 'data')}
+                            />
+                        </FormGroup>
+                    </div>
+                </div>
+            );
+        };
+
+        // Отрисовывает поля для блока "Газ".
+        const renderGasField = () => {
+            const {gas: data} = currentMonthUtilityPayments;
+
+            return (
+                <div className="col-xs-12">
+                    <hr className="dashed" />
+
+                    <div className="col-xs-2 field-icon">
+                        <FontAwesomeIcon icon={faFire} title={gas.subheader as string}/>
+                    </div>
+
+                    <div className="col-xs-10">
+                        <FormGroup
+                            label={(gas.actualSum as IFormFieldToRender).label}
+                            labelClassName="col-xs-4"
+                            elementClassName="col-xs-8"
+                        >
+                            <input
+                                className="form-control"
+                                placeholder={(gas.actualSum as IFormFieldToRender).placeholder}
+                                value={data ? data.actualSum : ''}
+                                onChange={this.handleChangeFormField('gas', 'actualSum')}
+                            />
+                        </FormGroup>
+
+                        <FormGroup
+                            label={(gas.data as IFormFieldToRender).label}
+                            labelClassName="col-xs-4"
+                            elementClassName="col-xs-8"
+                        >
+                            <input
+                                className="form-control"
+                                placeholder={(gas.data as IFormFieldToRender).placeholder}
+                                value={data ? data.data : ''}
+                                onChange={this.handleChangeFormField('gas', 'data')}
+                            />
+                        </FormGroup>
+                    </div>
+                </div>
             );
         }
 
         PublicUtilityPaymentsFormFields && Object.keys(PublicUtilityPaymentsFormFields).forEach((key: string) => {
-            if ('subheader' in PublicUtilityPaymentsFormFields[key]) {
-                result.push(renderComplex(PublicUtilityPaymentsFormFields[key]));
+            if(key === 'month') {
+                result.push(renderMonth(
+                    PublicUtilityPaymentsFormFields[key].label as string,
+                    PublicUtilityPaymentsFormFields[key].placeholder as string,
+                    key as keyof IPublicUtilityMonthPayments
+                    )
+                );
+            } else if (key === 'electricity') {
+                result.push(renderElectricityField());
+            } else if (key === 'gas') {
+                result.push(renderGasField());
+                result.push(<hr />)
             } else {
-                result.push(renderSimple(PublicUtilityPaymentsFormFields[key].label as string, PublicUtilityPaymentsFormFields[key].placeholder as string, key));
+                result.push(
+                    renderSimple(
+                        PublicUtilityPaymentsFormFields[key].label as string,
+                        PublicUtilityPaymentsFormFields[key].placeholder as string,
+                        key as keyof IPublicUtilityMonthPayments
+                    )
+                );
             }
         });
 
         return <React.Fragment>{result}</React.Fragment>;
+    };
+
+    /**
+     * Обновляет поле комплексного объекта (электричество или газ).
+     */
+    handleEditModalChangeComplexField = (field: keyof IPublicUtilityMonthPayments, value: IAbstractFuel) => {
+        let {currentMonthUtilityPayments} = this.state;
+        const newField = currentMonthUtilityPayments[field] ? {
+            ...currentMonthUtilityPayments[field] as IAbstractFuel,
+            ...value
+        } : {
+            ...value
+        };
+
+        this.setState((prevState: IState) => ({
+            currentMonthUtilityPayments: {
+                ...prevState.currentMonthUtilityPayments,
+                [field]: {...newField}
+            }
+        }));
+    };
+
+    /**
+     * Метод обработчик, собирает объект ключ-значение и прокидывает в метод для изменения состояния.
+     *
+     * @param {keyof IPublicUtilityMonthPayments} field Поле, значение в котором необходимо поменять.
+     * @param {keyof IAbstractFuel} key Ключ, для которого надо изменить значение.
+     * @param {number} value Значение.
+     */
+    handleChangeFormField = (field: keyof IPublicUtilityMonthPayments, key: keyof IAbstractFuel) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        
+        this.handleEditModalChangeComplexField(field, {[key]: value ? parseInt(value) : null});
     };
 
     /**
