@@ -1,6 +1,6 @@
-import {IPublicUtilityMonthPayments} from '../../../Models/PublicUtilityPayments';
+import {IPublicUtilityMonthPayments, IPublicUtilityPaymentsFilter} from '../../../Models/PublicUtilityPayments';
 import {SERVER_PATH} from '../../../Consts/REST';
-import {POST} from '../../../Utils/REST';
+import {POST, GET} from '../../../Utils/REST';
 
 /**
  * Сервисы для модуля коммунальных платежей.
@@ -14,5 +14,12 @@ export class PublicUtilityPaymentsServices {
      */
     saveNewPublicUtilityPayments = (newPublicUtilityPayments: IPublicUtilityMonthPayments) => {
         return POST(`${SERVER_PATH}/public-utility-payments`, newPublicUtilityPayments);
+    };
+
+    /** TODO: Переделать на параметризованный фильтр.
+     * Получение всех данных по коммунальным платежам.
+     */
+    getAllPublicUtilityPaymentsData = (_request: IPublicUtilityPaymentsFilter) => {
+        return GET(`${SERVER_PATH}/public-utility-payments`);
     };
 }

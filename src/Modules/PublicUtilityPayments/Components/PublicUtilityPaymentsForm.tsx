@@ -8,15 +8,20 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faPencilAlt, faCheck, faLightbulb, faFire} from '@fortawesome/free-solid-svg-icons';
 import {IPublicUtilityMonthPayments} from 'Models/PublicUtilityPayments';
 import {FormGroup} from 'Common/BuildingBlocks/FormGroup/FormGroup';
-import {PublicUtilityPaymentsServices} from '../Services/PublicUtilityPaymentsServices';
 import { IAbstractFuel, IAbstractOption } from 'Models/Common';
-
-const services = new PublicUtilityPaymentsServices();
+import { PublicUtilityPaymentsServices } from '../Services/PublicUtilityPaymentsServices';
+import { isArray } from 'util';
 
 /**
  * Модель собственных свойств компонента.
+ *
+ * @prop {PublicUtilityPaymentsServices} services Сервисы для использования.
+ * @prop {IPublicUtilityMonthPayments[]} publicUtilityPayments Данные о коммунальных платежах.
  */
-interface IOwnProps {}
+interface IOwnProps {
+    services: PublicUtilityPaymentsServices;
+    publicUtilityPayments: IPublicUtilityMonthPayments[];
+}
 
 /**
  * Модель состояния компонента.
@@ -39,6 +44,39 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
 
         this.state = {showEditFieldsModal: false, currentMonthUtilityPayments: {}};
     }
+
+    /**
+     * Кастомный художник строк.
+     *
+     * @param {IPublicUtilityMonthPayments[]} publicUtilityPayments Данные о коммунальных платежах.
+     */
+    customPublicUtilityPaymentsRowsRender = (publicUtilityPayments: IPublicUtilityMonthPayments[]) => {
+        let result: JSX.Element[] = [];
+
+        if (
+            isArray(publicUtilityPayments) &&
+            publicUtilityPayments.length
+        ) {
+            result = publicUtilityPayments.map((publicUtilityPayment: IPublicUtilityMonthPayments, index) => (
+                <tr key={`${publicUtilityPayment.month}_${publicUtilityPayment.year}`}>
+                    <td>{index + 1}</td>
+                    <td>{publicUtilityPayment.month}</td>
+                    <td>{publicUtilityPayment.electricity && publicUtilityPayment.electricity.actualSum || '-'}</td>
+                    <td>{publicUtilityPayment.electricity && publicUtilityPayment.electricity.countedSum || '-'}</td>
+                    <td>{publicUtilityPayment.electricity && publicUtilityPayment.electricity.data || '-'}</td>
+                    <td>{publicUtilityPayment.gas && publicUtilityPayment.gas.actualSum || '-'}</td>
+                    <td>{publicUtilityPayment.gas && publicUtilityPayment.gas.countedSum || '-'}</td>
+                    <td>{publicUtilityPayment.gas && publicUtilityPayment.gas.data || '-'}</td>
+                    <td>{publicUtilityPayment.hus}</td>
+                    <td>{publicUtilityPayment.rent}</td>
+                    <td>{publicUtilityPayment.sum && publicUtilityPayment.sum.actualSum || '-'}</td>
+                    <td>{publicUtilityPayment.sum && publicUtilityPayment.sum.countedSum || '-'}</td>
+                </tr>
+            ))
+        }
+
+        return result;
+    };
 
     /**
      * Возвращает опции для селекта месяца.
@@ -134,6 +172,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
      * Обработчик сохранения данных текущего месяца.
      */
     handleSave = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        const {services} = this.props;
         const {currentMonthUtilityPayments} = this.state;
         const {saveNewPublicUtilityPayments} = services;
         
@@ -371,6 +410,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
     }
 
     render() {
+        const {publicUtilityPayments} = this.props;
         const {showEditFieldsModal} = this.state;
 
         return (
@@ -399,11 +439,11 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                         Graph
                     </div>
 
-                    <div className="row">
-                        <Table 
-                            tableColumnsConfig={PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS}
-                        />
-                    </div>
+                    <Table 
+                        data={publicUtilityPayments}
+                        tableColumnsConfig={PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS}
+                        customRowsRender={this.customPublicUtilityPaymentsRowsRender}
+                    />
 
                     {showEditFieldsModal && (
                         <ModalWindow

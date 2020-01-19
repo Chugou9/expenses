@@ -26,56 +26,85 @@ export class TableHeader extends React.PureComponent<IOwnProps, IState> {
     renderHeaderColumns = (): JSX.Element[] => {
         const {tableColumnsConfig} = this.props;
         const result = [];
+        const firstRow = this.renderFistHeaderRow(tableColumnsConfig);
+        const secondRow = this.renderSecondHeaderRow(tableColumnsConfig);
+
+        result.push(firstRow, secondRow);
+
+        return result;
+    };
+
+    /**
+     * Рисует первый уровень заголовка таблицы.
+     *
+     * @param {ITableColumnsConfig} tableColumnsConfig Конфигурация столбцов таблицы.
+     */
+    renderFistHeaderRow = (tableColumnsConfig: ITableColumnsConfig): JSX.Element => {
+        const result: JSX.Element[] = [];
 
         if (
             tableColumnsConfig &&
             Object.keys(tableColumnsConfig).length
         ) {
 
-
             for (let key in tableColumnsConfig) {
                 if (typeof tableColumnsConfig[key] === 'string') {
-                    result.push(<th>{tableColumnsConfig[key]}</th>);
+                    result.push(<th key={tableColumnsConfig[key] as string} rowSpan={2}>{tableColumnsConfig[key]}</th>);
                 } else {
-                    result.push(
-                        this.renderComplexColumn(tableColumnsConfig[key] as ITableComplexColumn)
-                    );
-                }
+                    const {title, data} = tableColumnsConfig[key] as ITableComplexColumn;
 
+                    result.push(<th key={title} scope="colgroup" colSpan={data ? 3 : 2}>{title}</th>);
+                }
             }
         }
 
-        return result;
+        return <tr>{result}</tr>;
     };
 
     /**
-     * Рисует заголовок тематической колонки.
+     * Рисует второй уровень заголовка таблицы.
      *
-     * @param {ITableComplexColumn} params Параметры тематической колонки для отрисовки.
+     * @param {ITableColumnsConfig} tableColumnsConfig Конфигурация столбцов таблицы.
      */
-    renderComplexColumn = ({title, actualSum, countedSum, data}: ITableComplexColumn): JSX.Element => {
-        return (
-            <th className="complex-column">
-                <tr className="complex-column-title">
-                    <th colSpan={3}>{title}</th>
-                </tr>
+    renderSecondHeaderRow(tableColumnsConfig: ITableColumnsConfig) {
+        const result: JSX.Element[] = [];
 
-                <tr className="complex-column-content">
-                    <th>{actualSum}</th>
-                    <th>{countedSum}</th>
-                    {data &&<th>{data}</th>}
-                </tr>
-            </th>
-        );
-    }
+        if (
+            tableColumnsConfig &&
+            Object.keys(tableColumnsConfig).length
+        ) {
+
+            for (let key in tableColumnsConfig) {
+                if (typeof tableColumnsConfig[key] !== 'string') {
+                    const {title, data, countedSum, actualSum} = tableColumnsConfig[key] as ITableComplexColumn;
+
+                    result.push(
+                        <th key={`${title}_actualSum`}>{actualSum}</th>,
+                        <th key={`${title}_countedSum`}>{countedSum}</th>,
+                    );
+                    data && result.push(<th key={`${title}_data`}>{data}</th>);
+                }
+            }
+        }
+
+        return <tr>{result}</tr>;
+    };
+
 
     render() {
         return (
-            <thead>
-                <tr>
+            <React.Fragment> //TODO: Доделать разбивку по колонкам
+                {/* <col/>
+                <col/>
+                <colgroup span={3}></colgroup>
+                <colgroup span={3}></colgroup>
+                <col/>
+                <col/>
+                <colgroup span={2}></colgroup> */}
+                <thead>
                     {this.renderHeaderColumns()}
-                </tr>
-            </thead>
+                </thead>
+            </React.Fragment>
         );
     }
 }

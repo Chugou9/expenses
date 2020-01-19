@@ -12,4 +12,16 @@ export interface IPublicUtilityMonthPayments {
     hus?: number;
     rent?: number;
     sum?: IAbstractSum;
+    year?: number;
+}
+
+/**
+ * Модель запроса для фильтрования коммунальным платежей.
+ *
+ * @prop {number} year Год.
+ * @prop {number} month Месяц.
+ */
+export interface IPublicUtilityPaymentsFilter {
+    year?: number;
+    month?: number;
 }
