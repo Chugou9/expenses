@@ -16,7 +16,9 @@ module.exports = {
             Common: path.resolve(__dirname, './src/Common'),
             Main: path.resolve(__dirname, './src/Main'),
             Modules: path.resolve(__dirname, './src/Modules'),
-            Models: path.resolve(__dirname, './src/Models')
+            Models: path.resolve(__dirname, './src/Models'),
+            Consts: path.resolve(__dirname, './src/Consts'),
+            Utils: path.resolve(__dirname, './src/Utils')
         }
     },
     entry: {

@@ -1,5 +1,6 @@
 import {ITableColumnsConfig} from "../../Common/Table/Models";
 import {IFormFieldsToRenderConfig} from 'Models/FormModels';
+import {IPublicUtilityPaymentsFilter} from 'Models/PublicUtilityPayments';
 
 /**
  * Конфигурация столбцов для коммуналки.
@@ -65,4 +66,11 @@ export const PublicUtilityPaymentsFormFields: IFormFieldsToRenderConfig = {
         label: 'Арендная плата',
         placeholder: 'Введите сумму арендной платы'
     }
+};
+
+/**
+ * Запрос для фильтрации коммунальных платежей по умолчанию.
+ */
+export const DEFAULT_PUBLIC_UTILITY_REQUEST: IPublicUtilityPaymentsFilter = {
+    year: new Date().getFullYear()
 };
