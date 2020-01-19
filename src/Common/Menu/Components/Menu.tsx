@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {BrowserRouter as Router} from 'react-router-dom';
+import {BrowserRouter as Router, Redirect} from 'react-router-dom';
 import {NavLinks} from './NavLinks';
 import {RouterSwitch} from './RouterSwitch';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCompass} from '@fortawesome/free-solid-svg-icons';
+import { ROUTES } from '../Consts';
 
 /**
  * Модель собственных свойств компонента.
@@ -14,10 +15,12 @@ interface IOwnProps {}
  * Модель состояния компонента.
  *
  * @param {boolean} isMenuShown Флаг, который показывает, открыто ли меню.
+ * @prop {boolean} firstLogIn Вход осуществлен первый раз.
  * @param {string} [menuClassname] Класс для управления отображением меню.
  */
 interface IState {
-    isMenuShown: boolean;
+    isMenuShown?: boolean;
+    firstLogIn?: boolean;
     menuClassname?: string;
 }
 
@@ -30,9 +33,14 @@ export class Menu extends React.PureComponent<IOwnProps, IState> {
         super(props);
 
         this.state = {
+            firstLogIn: true,
             isMenuShown: false,
             menuClassname: 'hidden'
         };
+    }
+
+    componentDidMount() {
+        this.setState({firstLogIn: false});
     }
 
     /**
@@ -49,7 +57,7 @@ export class Menu extends React.PureComponent<IOwnProps, IState> {
     };
 
     render () {
-        const {isMenuShown} = this.state;
+        const {isMenuShown, firstLogIn} = this.state;
 
         return (
             <div className="menu">
@@ -62,6 +70,7 @@ export class Menu extends React.PureComponent<IOwnProps, IState> {
                 {(
                     <Router>
                         <React.Fragment>
+                            {firstLogIn && <Redirect to={{pathname: ROUTES.PUBLIC_UTILITY_PAYMENTS.PATH}} />}
                             <NavLinks className={isMenuShown ? 'menu-expanding' : 'menu-collapsing'}/>
 
                             <RouterSwitch/>
