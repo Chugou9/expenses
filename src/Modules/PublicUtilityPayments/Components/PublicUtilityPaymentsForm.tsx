@@ -5,12 +5,15 @@ import {LayoutBlock} from 'Common/Layout/Components/LayoutBlock'
 import {PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS, PublicUtilityPaymentsFormFields} from '../Consts';
 import {IFormFieldToRender} from 'Models/FormModels';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPencilAlt, faCheck, faLightbulb, faFire} from '@fortawesome/free-solid-svg-icons';
+import {faCheck, faLightbulb, faFire, faPlus} from '@fortawesome/free-solid-svg-icons';
 import {IPublicUtilityMonthPayments} from 'Models/PublicUtilityPayments';
 import {FormGroup} from 'Common/BuildingBlocks/FormGroup/FormGroup';
 import { IAbstractFuel, IAbstractOption } from 'Models/Common';
 import { PublicUtilityPaymentsServices } from '../Services/PublicUtilityPaymentsServices';
 import { isArray } from 'util';
+import {EModalMode} from 'Enums/Modal'
+import {PublicUtilityPaymentsActionPanel} from './PublicUtilityPaymentsActionsPanel';
+import {Input} from 'Common/BuildingBlocks/Input/Input';
 
 /**
  * Модель собственных свойств компонента.
@@ -32,6 +35,7 @@ interface IOwnProps {
 interface IState {
     showEditFieldsModal: boolean;
     currentMonthUtilityPayments: IPublicUtilityMonthPayments;
+    modalMode: EModalMode | null;
 }
 
 /**
@@ -42,8 +46,25 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
     constructor(props: IOwnProps) {
         super(props);
 
-        this.state = {showEditFieldsModal: false, currentMonthUtilityPayments: {}};
+        this.state = {
+            showEditFieldsModal: false,
+            currentMonthUtilityPayments: {},
+            modalMode: EModalMode.ADD
+        };
     }
+
+    /**
+     * Показывает модальное окно и кладет данные выбранного месяца в state.
+     *
+     * @param {IPublicUtilityMonthPayments} selectedItem Данные выбранного месяца для редактирования.
+     */
+    handleEditPublicUtilityPayment = (selectedItem: IPublicUtilityMonthPayments) => {
+        this.setState({
+            showEditFieldsModal: true,
+            currentMonthUtilityPayments: selectedItem,
+            modalMode: EModalMode.EDIT
+        });
+    };
 
     /**
      * Кастомный художник строк.
@@ -51,6 +72,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
      * @param {IPublicUtilityMonthPayments[]} publicUtilityPayments Данные о коммунальных платежах.
      */
     customPublicUtilityPaymentsRowsRender = (publicUtilityPayments: IPublicUtilityMonthPayments[]) => {
+        const {services} = this.props;
         let result: JSX.Element[] = [];
 
         if (
@@ -60,7 +82,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             result = publicUtilityPayments.map((publicUtilityPayment: IPublicUtilityMonthPayments, index) => (
                 <tr key={`${publicUtilityPayment.month}_${publicUtilityPayment.year}`}>
                     <td>{index + 1}</td>
-                    <td>{publicUtilityPayment.month}</td>
+                    <td>{this.getMonth(publicUtilityPayment.month as number)}</td>
                     <td>{publicUtilityPayment.electricity && publicUtilityPayment.electricity.actualSum || '-'}</td>
                     <td>{publicUtilityPayment.electricity && publicUtilityPayment.electricity.countedSum || '-'}</td>
                     <td>{publicUtilityPayment.electricity && publicUtilityPayment.electricity.data || '-'}</td>
@@ -71,6 +93,11 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                     <td>{publicUtilityPayment.rent}</td>
                     <td>{publicUtilityPayment.sum && publicUtilityPayment.sum.actualSum || '-'}</td>
                     <td>{publicUtilityPayment.sum && publicUtilityPayment.sum.countedSum || '-'}</td>
+                    <td><PublicUtilityPaymentsActionPanel
+                        selectedItem={publicUtilityPayment}
+                        onEdit={this.handleEditPublicUtilityPayment}
+                        services={services}
+                    /></td>
                 </tr>
             ))
         }
@@ -135,17 +162,28 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
     }
 
     /**
+     * Вернет строку месяца по числовому формату.
+     *
+     * @param {number} month Номер месяца.
+     */
+    getMonth(month: number) {
+        const foundedMonth = this.getSelectMonthOptions().find((option: IAbstractOption) => option.value === month);
+
+        return foundedMonth ? foundedMonth.label : '';
+    }
+
+    /**
      * Обработчик открытия модального окна редактирования полей.
      */
-    handleOpenEditModal = () => {
-        this.setState({showEditFieldsModal: true});
+    handleOpenAddModal = () => {
+        this.setState({showEditFieldsModal: true, modalMode: EModalMode.ADD}); 
     };
 
     /**
      * Обработчик закрытия модального окна редактирования полей.
      */
     handleCloseEditModal = () => {
-        this.setState({showEditFieldsModal: false});
+        this.setState({showEditFieldsModal: false, modalMode: null});
     };
 
     /**
@@ -153,17 +191,15 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
      *
      * @param {keyof IPublicUtilityMonthPayments} field Наименование поля.
      */
-    handleEditModalChangeField = (
+    handleChangeModalField = (
         field: keyof IPublicUtilityMonthPayments
     ) => (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const value = event.target.value;
-          
+        value: string | null
+    ) => {         
         this.setState((prevState: IState) => ({
             currentMonthUtilityPayments: {
                 ...prevState.currentMonthUtilityPayments,
-                [field]: value ? parseInt(value) : null
+                [field]: value ? parseFloat(value) : null
             }
         }));
     };
@@ -173,12 +209,15 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
      */
     handleSave = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const {services} = this.props;
-        const {currentMonthUtilityPayments} = this.state;
-        const {saveNewPublicUtilityPayments} = services;
-        
-        saveNewPublicUtilityPayments(currentMonthUtilityPayments).then(
-            (value: any) => {
-                console.log(value);
+        const {currentMonthUtilityPayments, modalMode} = this.state;
+        const {saveNewPublicUtilityPayments, updatePublicUtilityPayments} = services;
+        const action = modalMode === EModalMode.ADD
+            ? saveNewPublicUtilityPayments
+            : updatePublicUtilityPayments;
+
+        action(currentMonthUtilityPayments).then(
+            (_value: any) => {
+                console.log(currentMonthUtilityPayments);
                 this.handleCloseEditModal();
             },
             (error) => console.log(error)
@@ -205,18 +244,22 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
         const result: JSX.Element[] = [];
 
         const renderSimple = (label: string, placeholder: string, field: keyof IPublicUtilityMonthPayments) => {
+            const value: number = currentMonthUtilityPayments[field] as number;
+
             return (
                 <FormGroup
                     label={label}
                     labelClassName="col-xs-4"
                     elementClassName="col-xs-8"
                 >
-                    <input
-                        className="form-control"
-                        placeholder={placeholder}
-                        value={currentMonthUtilityPayments[field as keyof IPublicUtilityMonthPayments] as string | number}
-                        onChange={this.handleEditModalChangeField(field)}
-                    />
+                    {Input({
+                        step:0.1,
+                        className:"form-control",
+                        placeholder,
+                        value,
+                        onChange:this.handleChangeModalField(field),
+                        type: 'number'
+                    })}
                 </FormGroup>
             );
         };
@@ -259,12 +302,13 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                             labelClassName="col-xs-4"
                             elementClassName="col-xs-8"
                         >
-                            <input
-                                className="form-control"
-                                placeholder={(electricity.actualSum as IFormFieldToRender).placeholder}
-                                value={data ? data.actualSum : ''}
-                                onChange={this.handleChangeFormField('electricity', 'actualSum')}
-                            />
+                            {Input({
+                                type:"number",
+                                className:"form-control",
+                                placeholder:(electricity.actualSum as IFormFieldToRender).placeholder as string,
+                                value:data ? data.actualSum as number : null,
+                                onChange:this.handleChangeFormField('electricity', 'actualSum')
+                            })}
                         </FormGroup>
 
                         <FormGroup
@@ -272,12 +316,13 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                             labelClassName="col-xs-4"
                             elementClassName="col-xs-8"
                         >
-                            <input
-                                className="form-control"
-                                placeholder={(electricity.data as IFormFieldToRender).placeholder}
-                                value={data ? data.data : ''}
-                                onChange={this.handleChangeFormField('electricity', 'data')}
-                            />
+                            {Input({
+                                type:"number",
+                                className:"form-control",
+                                placeholder:(electricity.data as IFormFieldToRender).placeholder as string,
+                                value:data ? data.data as number : null,
+                                onChange:this.handleChangeFormField('electricity', 'data')
+                            })}
                         </FormGroup>
                     </div>
                 </div>
@@ -302,12 +347,13 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                             labelClassName="col-xs-4"
                             elementClassName="col-xs-8"
                         >
-                            <input
-                                className="form-control"
-                                placeholder={(gas.actualSum as IFormFieldToRender).placeholder}
-                                value={data ? data.actualSum : ''}
-                                onChange={this.handleChangeFormField('gas', 'actualSum')}
-                            />
+                            {Input({
+                                type:"number",
+                                className:"form-control",
+                                placeholder:(gas.actualSum as IFormFieldToRender).placeholder as string,
+                                value:data ? data.actualSum as number : null,
+                                onChange:this.handleChangeFormField('gas', 'actualSum')
+                            })}
                         </FormGroup>
 
                         <FormGroup
@@ -315,12 +361,13 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                             labelClassName="col-xs-4"
                             elementClassName="col-xs-8"
                         >
-                            <input
-                                className="form-control"
-                                placeholder={(gas.data as IFormFieldToRender).placeholder}
-                                value={data ? data.data : ''}
-                                onChange={this.handleChangeFormField('gas', 'data')}
-                            />
+                            {Input({
+                                type:"number",
+                                className:"form-control",
+                                placeholder:(gas.data as IFormFieldToRender).placeholder as string,
+                                value:data ? data.data as number : null,
+                                onChange:this.handleChangeFormField('gas', 'data'),
+                            })}
                         </FormGroup>
                     </div>
                 </div>
@@ -369,7 +416,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
         this.setState((prevState: IState) => ({
             currentMonthUtilityPayments: {
                 ...prevState.currentMonthUtilityPayments,
-                [field]: {...newField}
+                [field]: newField
             }
         }));
     };
@@ -379,19 +426,52 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
      *
      * @param {keyof IPublicUtilityMonthPayments} field Поле, значение в котором необходимо поменять.
      * @param {keyof IAbstractFuel} key Ключ, для которого надо изменить значение.
-     * @param {number} value Значение.
+     * @param {number | string} value Значение.
      */
-    handleChangeFormField = (field: keyof IPublicUtilityMonthPayments, key: keyof IAbstractFuel) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        
-        this.handleEditModalChangeComplexField(field, {[key]: value ? parseInt(value) : null});
+    handleChangeFormField = (
+        field: keyof IPublicUtilityMonthPayments,
+        key: keyof IAbstractFuel
+    ) => (
+        value: string | number | null
+    ) => {        
+        this.handleEditModalChangeComplexField(field, {[key]: value ? value : null});
     };
 
     /**
      * Отрисовывает заголовок модального окна.
      */
     renderEditModalTitle = () => {
-        return <label>Редактирование коммунальных расходов текущего месяца</label>
+        const {currentMonthUtilityPayments: {
+            gas,
+            electricity
+        }} = this.state;
+
+        return (
+            <div className="public-utility-payments-modal-title">
+                <label>Редактирование коммунальных расходов текущего месяца</label>
+                <div className="public-utility-payments-modal-title-actions">
+                    <div className="label row">
+                        <p className="mb-0">Тарифы</p>
+                    </div>
+                    <div className="row mt-1">
+                        <FontAwesomeIcon className="mr-1" icon={faFire}/>
+                        {Input({
+                            className: 'rate-input form-control',
+                            value: gas ? gas.rate as number : null,
+                            onChange: this.handleChangeFormField('gas', 'rate')
+                        })}
+                    </div>
+                    <div className="row mt-1">
+                        <FontAwesomeIcon className="mr-1" icon={faLightbulb}/>
+                        {Input({
+                            className: 'rate-input form-control',
+                            value: electricity ? electricity.rate as number : null,
+                            onChange: this.handleChangeFormField('electricity', 'rate')
+                        })}
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     renderEditModalFooter = () => {
@@ -402,7 +482,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                     className="btn btn-success"
                     onClick={this.handleSave}
                 >
-                    <FontAwesomeIcon icon={faCheck}/>
+                    <FontAwesomeIcon className="mr-1" icon={faCheck}/>
                     <span>Сохранить</span>
                 </button>
             </React.Fragment>
@@ -423,13 +503,13 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
 
                         <div className="form-title-action-container">
                             <button
-                                className="btn btn-icon"
-                                title="Редактировать"
-                                onClick={this.handleOpenEditModal}
+                                className="btn btn-icon mb-2"
+                                title="Добавить"
+                                onClick={this.handleOpenAddModal}
                                 tabIndex={1}
                             >
                                 <FontAwesomeIcon 
-                                    icon={faPencilAlt}
+                                    icon={faPlus}
                                 />
                             </button>
                         </div>
@@ -448,7 +528,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                     {showEditFieldsModal && (
                         <ModalWindow
                             title={this.renderEditModalTitle()}
-                            className="form-horizontal modal-500"
+                            className="form-horizontal modal-500 public-utility-payments-modal"
                             body={this.renderFields()}
                             onClose={this.handleCloseEditModal}
                             footer={this.renderEditModalFooter()}

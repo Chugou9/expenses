@@ -10,17 +10,15 @@ a {
 
 thead {
     background-color: @color-lighter-grey;
-    border-color: @color-grey;
-    border-width: 2px;
-    border-style: solid;
     font: italic @base*4 'Trebuchet MS', sans-serif;
 
     tr {
+        text-align: center;
+        padding: @base;
         th {
             font-weight: 200;
             padding: 5px 5px;
             text-align: center;
-            border-left: 2px solid @color-grey;
 
             &:first-child {
                 border-left: none;
@@ -43,6 +41,25 @@ thead {
     }
 }
 
+tbody {
+    tr {
+        text-align: center;
+        &:hover {
+            background-color: #ddd;
+        }
+        td {
+            padding-top: @base;
+            border-bottom: 2px solid @color-grey;
+        }
+    }
+}
+
+table, thead, th {
+    border-color: @color-grey;
+    border-width: 2px;
+    border-style: solid;
+}
+
 .layout-block {
     margin: @base*3;
     background-color: @color-white;
@@ -55,7 +72,7 @@ thead {
     padding-right: @base*3;
     font: italic @base*4 'Trebuchet MS', sans-serif !important;
 
-    .form-title-container{
+    .form-title-container {
         width: 100%;
         border-bottom: @base solid orange;
         display: block;
@@ -72,4 +89,12 @@ thead {
     .inherit-width {
         width: inherit;
     }
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.no-wrap {
+    white-space: nowrap !important;
 }

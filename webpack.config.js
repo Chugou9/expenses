@@ -18,7 +18,8 @@ module.exports = {
             Modules: path.resolve(__dirname, './src/Modules'),
             Models: path.resolve(__dirname, './src/Models'),
             Consts: path.resolve(__dirname, './src/Consts'),
-            Utils: path.resolve(__dirname, './src/Utils')
+            Utils: path.resolve(__dirname, './src/Utils'),
+            Enums: path.resolve(__dirname, './src/Enums')
         }
     },
     entry: {

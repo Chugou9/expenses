@@ -1,7 +1,7 @@
 
 .generate-margins(9);
 
-.generate-margins(@n, @i: 1) when (@i <= @n) {
+.generate-margins(@n, @i: 0) when (@i <= @n) {
     .mt-@{i} {
         margin-top: @i * @base; 
     }
@@ -19,4 +19,26 @@
     }
 
     .generate-margins(@n, @i + 1);
+}
+
+.generate-paddings(9);
+
+.generate-paddings(@n, @i: 1) when (@i <= @n) {
+    .pt-@{i} {
+        padding-top: @i * @base; 
+    }
+
+    .pb-@{i} {
+        padding-bottom: @i * @base;
+    }
+
+    .pr-@{i} {
+        padding-right: @i * @base; 
+    }
+
+    .pl-@{i} {
+        padding-left: @i * @base; 
+    }
+
+    .generate-paddings(@n, @i + 1);
 }
