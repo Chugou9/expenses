@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CustomSpinner } from '../BuildingBlocks/FormGroup/Spinner';
+import { CustomSpinner } from '../BuildingBlocks/Spinner';
 
 /**
  * Модель собственных свойств компонента.

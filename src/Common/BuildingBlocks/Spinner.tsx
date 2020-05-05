@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ScaleLoader} from 'react-spinners';
+import {ClockLoader} from 'react-spinners';
 import {css} from '@emotion/core';
 
 /**
@@ -18,8 +18,12 @@ interface IState {
 const override = css`
     position: absolute;
     display: block;
-    margin: 0 auto;
+    margin: auto;
     border-color: grey;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
 `;
 
 export class CustomSpinner extends React.PureComponent<IOwnProps, IState> {
@@ -33,11 +37,9 @@ export class CustomSpinner extends React.PureComponent<IOwnProps, IState> {
         const {show} = this.props;
 
         return (
-            <ScaleLoader
+            <ClockLoader
                 css={override}
-                height='150px'
-                width='150px'
-                //size={"150px"} this also works
+                size={"50px"}
                 color={"#123abc"}
                 loading={show}
             />

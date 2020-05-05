@@ -13,6 +13,7 @@ export interface IPublicUtilityMonthPayments {
     rent?: number;
     sum?: IAbstractSum;
     year?: number;
+    _id?: number | string;
 }
 
 /**

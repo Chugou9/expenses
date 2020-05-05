@@ -92,8 +92,9 @@ export class TableHeader extends React.PureComponent<IOwnProps, IState> {
 
 
     render() {
+        //TODO: Доделать разбивку по колонкам
         return (
-            <React.Fragment> //TODO: Доделать разбивку по колонкам
+            <React.Fragment>
                 {/* <col/>
                 <col/>
                 <colgroup span={3}></colgroup>
