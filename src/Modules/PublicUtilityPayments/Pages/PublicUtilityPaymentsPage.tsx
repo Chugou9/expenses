@@ -4,6 +4,7 @@ import {PublicUtilityPaymentsForm} from '../Components/PublicUtilityPaymentsForm
 import { DEFAULT_PUBLIC_UTILITY_REQUEST } from '../Consts';
 import { IPublicUtilityMonthPayments } from 'Models/PublicUtilityPayments';
 import { PageOverlay } from 'Common/PageOverlay/PageOverlay';
+import cloneDeep from 'lodash.clonedeep';
 
 const services = new PublicUtilityPaymentsServices();
 
@@ -35,15 +36,24 @@ export class PublicUtilityPaymentsPage extends React.PureComponent<IOwnProps, IS
     }
 
     componentDidMount() {
-        services.getAllPublicUtilityPaymentsData(DEFAULT_PUBLIC_UTILITY_REQUEST).then(
-            (data) => {
-                this.setState({publicUtilityPayments: [...data], isLoading: false});
-            },
-            (error) => {
-                this.setState({isLoading: false});
+        this.handleGetAllData();
+    }
 
-                throw new Error(error);
-            }
+    /**
+     * Получить все данные по коммунальным платежам за текущий год.
+     */
+    handleGetAllData = () => {
+        this.setState({isLoading: true},
+            () => services.getAllPublicUtilityPaymentsData(DEFAULT_PUBLIC_UTILITY_REQUEST).then(
+                (data) => {
+                    this.setState({publicUtilityPayments: cloneDeep(data), isLoading: false});
+                },
+                (error) => {
+                    this.setState({isLoading: false});
+
+                    throw new Error(error);
+                }
+            )
         );
     }
 
@@ -57,6 +67,7 @@ export class PublicUtilityPaymentsPage extends React.PureComponent<IOwnProps, IS
                 <PublicUtilityPaymentsForm
                     publicUtilityPayments={publicUtilityPayments!}
                     services={services}
+                    onRefreshData={this.handleGetAllData}
                 />
             </React.Fragment>
         );

@@ -45,7 +45,12 @@ module.exports = {
                 test: /\.(ts|js)x?$/,
                 exclude: /node_modules/,
                 use: [
-                    'babel-loader',
+                    {
+                      loader: 'babel-loader',
+                      options: {
+                        cacheDirectory: true
+                      }
+                    },
                     {
                         loader: 'ts-loader',
                         options: {

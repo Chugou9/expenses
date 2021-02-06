@@ -23,7 +23,7 @@ module.exports = {
         minimize: true,
         minimizer: [
             new TerserPlugin({
-                parallel: 4
+                parallel: 8
             })
         ]
     },

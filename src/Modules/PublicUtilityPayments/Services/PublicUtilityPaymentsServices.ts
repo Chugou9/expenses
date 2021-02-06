@@ -13,14 +13,18 @@ export class PublicUtilityPaymentsServices {
      * @param {IPublicUtilityMonthPayments} newPublicUtilityPayments Новые данные по платежам за текущий месяц.
      */
     saveNewPublicUtilityPayments = (newPublicUtilityPayments: IPublicUtilityMonthPayments): Promise<IPublicUtilityMonthPayments> => {
-        return POST(`${SERVER_PATH}/public-utility-payments`, newPublicUtilityPayments);
+        return POST(`${SERVER_PATH}/public-utility-payments`, newPublicUtilityPayments).then(
+            (response) => {
+                this.getAllPublicUtilityPaymentsData()
+                return response;
+        });
     };
 
     /** TODO: Переделать на параметризованный фильтр.
      * Получение всех данных по коммунальным платежам.
      */
-    getAllPublicUtilityPaymentsData = (_request: IPublicUtilityPaymentsFilter): Promise<IPublicUtilityMonthPayments[]> => {
-        return GET(`${SERVER_PATH}/public-utility-payments`);
+    getAllPublicUtilityPaymentsData = (request: IPublicUtilityPaymentsFilter = {year: new Date().getFullYear()}): Promise<IPublicUtilityMonthPayments[]> => {
+        return GET(`${SERVER_PATH}/public-utility-payments`, request);
     };
 
     /**
@@ -29,7 +33,11 @@ export class PublicUtilityPaymentsServices {
      * @param {IPublicUtilityMonthPayments} editedPublicUtilityPayments Обновленные данные по платежам за текущий месяц.
      */
     updatePublicUtilityPayments = (editedPublicUtilityPayments: IPublicUtilityMonthPayments): Promise<IPublicUtilityMonthPayments> => {
-        return PUT(`${SERVER_PATH}/public-utility-payments/${editedPublicUtilityPayments._id}`, editedPublicUtilityPayments);
+        return PUT(`${SERVER_PATH}/public-utility-payments/${editedPublicUtilityPayments._id}`, editedPublicUtilityPayments).then(
+            (response) => {
+                this.getAllPublicUtilityPaymentsData()
+                return response;
+        });;
     };
 
     /**

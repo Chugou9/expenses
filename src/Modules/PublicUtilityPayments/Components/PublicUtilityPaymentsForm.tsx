@@ -5,25 +5,27 @@ import {LayoutBlock} from 'Common/Layout/Components/LayoutBlock'
 import {PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS, PublicUtilityPaymentsFormFields} from '../Consts';
 import {IFormFieldToRender} from 'Models/FormModels';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faLightbulb, faFire, faPlus} from '@fortawesome/free-solid-svg-icons';
+import {faCheck, faLightbulb, faFire, faPlus, faSync} from '@fortawesome/free-solid-svg-icons';
 import {IPublicUtilityMonthPayments} from 'Models/PublicUtilityPayments';
 import {FormGroup} from 'Common/BuildingBlocks/FormGroup/FormGroup';
 import { IAbstractFuel, IAbstractOption } from 'Models/Common';
 import { PublicUtilityPaymentsServices } from '../Services/PublicUtilityPaymentsServices';
-import { isArray } from 'util';
 import {EModalMode} from 'Enums/Modal'
 import {PublicUtilityPaymentsActionPanel} from './PublicUtilityPaymentsActionsPanel';
 import {Input} from 'Common/BuildingBlocks/Input/Input';
+import isEmpty from 'lodash.isempty';
 
 /**
  * Модель собственных свойств компонента.
  *
  * @prop {PublicUtilityPaymentsServices} services Сервисы для использования.
  * @prop {IPublicUtilityMonthPayments[]} publicUtilityPayments Данные о коммунальных платежах.
+ * @prop {Funtion} onRefreshData Колбэк на обновление данных.
  */
 interface IOwnProps {
     services: PublicUtilityPaymentsServices;
     publicUtilityPayments: IPublicUtilityMonthPayments[];
+    onRefreshData: () => void;
 }
 
 /**
@@ -75,10 +77,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
         const {services} = this.props;
         let result: JSX.Element[] = [];
 
-        if (
-            isArray(publicUtilityPayments) &&
-            publicUtilityPayments.length
-        ) {
+        if (!isEmpty(publicUtilityPayments)) {
             result = publicUtilityPayments.map((publicUtilityPayment: IPublicUtilityMonthPayments, index) => (
                 <tr key={`${publicUtilityPayment.month}_${publicUtilityPayment.year}`}>
                     <td>{index + 1}</td>
@@ -490,7 +489,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
     }
 
     render() {
-        const {publicUtilityPayments} = this.props;
+        const {publicUtilityPayments, onRefreshData} = this.props;
         const {showEditFieldsModal} = this.state;
 
         return (
@@ -510,6 +509,17 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                             >
                                 <FontAwesomeIcon 
                                     icon={faPlus}
+                                />
+                            </button>
+
+                            <button
+                                className="btn btn-icon mb-2 ml-1"
+                                title="Обновить"
+                                onClick={onRefreshData}
+                                tabIndex={2}
+                            >
+                                <FontAwesomeIcon 
+                                    icon={faSync}
                                 />
                             </button>
                         </div>
