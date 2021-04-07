@@ -7,9 +7,11 @@ module.exports = {
     context: __dirname,
     mode: "development",
     devtool: "source-map",
-    devServer: {
-        contentBase: './dist'
-    },
+    // devServer: {
+    //   contentBase: './dist',
+    //   port: 8081,
+    //   host: '0.0.0.0'
+    // },
     resolve: {
         extensions: [".ts",".tsx", '.js', '.jsx', '.css', '.less'],
         alias: {
@@ -45,7 +47,12 @@ module.exports = {
                 test: /\.(ts|js)x?$/,
                 exclude: /node_modules/,
                 use: [
-                    'babel-loader',
+                    {
+                      loader: 'babel-loader',
+                      options: {
+                        cacheDirectory: true
+                      }
+                    },
                     {
                         loader: 'ts-loader',
                         options: {

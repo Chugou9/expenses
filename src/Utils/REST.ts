@@ -1,3 +1,5 @@
+import isEmpty from 'lodash.isempty';
+
 /**
  * Реализация POST метода REST API.
  *
@@ -45,11 +47,17 @@ export const PUT = (path: string, params?: any) => {
  *
  * @param {string} path Путь для запроса.
  */
-export const GET = (path: string) => {
-    return fetch(path, {
+export const GET = (path: string, options?: any) => {
+    const url = new URL(path);
+
+    if (!isEmpty(options)) {
+        Object.keys(options).forEach((key) => url.searchParams.append(key, options[key]));
+    }
+
+    return fetch(url.toString(), {
         method: 'GET',
         mode: 'cors',
-        cache: 'no-cache',
+        cache: 'reload',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',

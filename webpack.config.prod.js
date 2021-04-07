@@ -1,11 +1,23 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
+    context: __dirname,
     mode: "production",
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.jsx']
+        extensions: [".ts",".tsx", '.js', '.jsx', '.css', '.less'],
+        alias: {
+            Common: path.resolve(__dirname, './src/Common'),
+            Main: path.resolve(__dirname, './src/Main'),
+            Modules: path.resolve(__dirname, './src/Modules'),
+            Models: path.resolve(__dirname, './src/Models'),
+            Consts: path.resolve(__dirname, './src/Consts'),
+            Utils: path.resolve(__dirname, './src/Utils'),
+            Enums: path.resolve(__dirname, './src/Enums')
+        }
     },
     entry: {
         application: './src/index.tsx',
@@ -23,7 +35,7 @@ module.exports = {
         minimize: true,
         minimizer: [
             new TerserPlugin({
-                parallel: 4
+                parallel: 8
             })
         ]
     },
@@ -33,7 +45,12 @@ module.exports = {
                 test: /\.(ts|js)x?$/,
                 exclude: /node_modules/,
                 use: [
-                    'babel-loader',
+                    {
+                      loader: 'babel-loader',
+                      options: {
+                        cacheDirectory: true
+                      }
+                    },
                     {
                         loader: 'ts-loader',
                         options: {
@@ -41,7 +58,7 @@ module.exports = {
                             experimentalWatchApi: true,
                         }
                     }
-                ],
+                ]
             },
             {
                 test: /\.css$/,
@@ -53,23 +70,42 @@ module.exports = {
                 loader: "source-map-loader"
             },
             {
-                test: /\.less/,
-                exclude: /node_modules/,
-                loader: 'less-loader'
-            }
+                test: /\.less$/,
+                use: [
+                  {
+                    loader: 'style-loader', // creates style nodes from JS strings
+                  },
+                  {
+                    loader: 'css-loader', // translates CSS into CommonJS
+                  },
+                  {
+                    loader: 'less-loader', // compiles Less to CSS
+                  },
+                ],
+              },
+              {
+                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                use: [
+                  {
+                    loader: 'file-loader',
+                    options: {
+                      name: '[name].[ext]',
+                      outputPath: 'fonts/'
+                    }
+                  }
+                ]
+              }
         ]
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            title: 'Output Management',
+        }),
+        new CleanWebpackPlugin(),
         new ForkTsCheckerWebpackPlugin({
             async: false,
             useTypescriptIncrementalApi: true,
             memoryLimit: 4096
         }),
     ],
-    resolve: {
-        alias: {
-            Common: path.resolve(__dirname, './src/Common/'),
-            Main: path.resolve(__dirname, './src/Main/')
-        }
-    }
 }
