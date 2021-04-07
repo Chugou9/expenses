@@ -13,5 +13,9 @@ export const ROUTES = {
     CHAT: {
         PATH: '/chat',
         NAME: 'Чат'
+    },
+    AUTHORISATION: {
+        PATH: '/auth',
+        NAME: 'Авторизация'
     }
 };
