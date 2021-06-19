@@ -10,7 +10,7 @@ export class AuthServices {
                 console.log('json', response);
                 setLogin(response.token, response.userId)
             },
-            (err) => console.log('Login error', err)
+            (err) => console.error('Login error', err)
         );
     }
 

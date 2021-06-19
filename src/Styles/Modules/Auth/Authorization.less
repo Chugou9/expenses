@@ -1,3 +1,44 @@
 .auth-form {
-  margin: 0 auto;
+  min-width: 300px;
+  font-size: 16px;
+  display: flex;
+  flex-flow: column nowrap;
+  color: blueviolet;
+
+  &__form-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    flex-flow: row nowrap;
+    align-items: normal;
+    justify-content: space-between;
+
+    &__label {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 1;
+      padding: 4px 6px;
+      justify-self: flex-start;
+    }
+
+    &__element {
+      max-width: fit-content;
+      grid-column-end: 4;
+      grid-column-start: 2;
+
+      & > input:first-child {
+        width: 100%;
+      }
+    }
+  }
+
+  & > button[type="submit"] > svg:first-child {
+    margin-right: 4px;
+  }
+}
+
+.auth-container {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
 }

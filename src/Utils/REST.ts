@@ -15,7 +15,7 @@ export const POST = (path: string, params?: any) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        redirect: 'follow',
+        // redirect: 'follow',
         referrer: 'no-referrer',
         body: JSON.stringify(params)
     }).then(response => response.json());

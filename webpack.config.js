@@ -8,9 +8,7 @@ module.exports = {
     mode: "development",
     devtool: "source-map",
     // devServer: {
-    //   contentBase: './dist',
-    //   port: 8081,
-    //   host: '0.0.0.0'
+    //   contentBase: './dist'
     // },
     resolve: {
         extensions: [".ts",".tsx", '.js', '.jsx', '.css', '.less'],

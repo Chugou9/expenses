@@ -1,5 +1,4 @@
 import * as React from "react";
-import { isFunction } from "util";
 
 /**
  * Собственные свойства компонента ввода.
@@ -34,7 +33,7 @@ export function Input({
     const handleChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
         let value = e.currentTarget.value;
         
-        isFunction(onChange) && onChange(value ? value : null);
+        typeof onChange === 'function' && onChange(value ? value : null);
     };
 
     return (

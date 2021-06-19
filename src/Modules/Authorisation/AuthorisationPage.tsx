@@ -25,15 +25,18 @@ const AuthorisationPage = (): JSX.Element => {
         setPasswordValue(value);
     }
 
-    function handleAuthorisationClick() {
+    const handleAuthorisationClick = () => {
         services.logIn({email: loginValue, password: passwordValue}, login);
     }
 
     return (
-        <LayoutBlock>
-            <div className="auth-form form-horizontal">
+        <LayoutBlock className="auth-container">
+            <form className="auth-form" onSubmit={handleAuthorisationClick}>
                 <FormGroup
                     label="Логин"
+                    containerClassName="auth-form__form-group"
+                    labelClassName="auth-form__form-group__label"
+                    elementClassName="auth-form__form-group__element"
                 >
                     <input
                         placeholder="Введите логин..."
@@ -44,6 +47,9 @@ const AuthorisationPage = (): JSX.Element => {
 
                 <FormGroup
                     label="Пароль"
+                    containerClassName="auth-form__form-group"
+                    labelClassName="auth-form__form-group__label"
+                    elementClassName="auth-form__form-group__element"
                 >
                     <input
                         placeholder="Введите пароль..."
@@ -53,14 +59,15 @@ const AuthorisationPage = (): JSX.Element => {
                 </FormGroup>
 
                 <button
-                    onClick={handleAuthorisationClick}
+                    type="submit"
                     title="Авторизоваться"
-                    className=" btn btn-success"
+                    className="btn btn-success"
+                    onClick={handleAuthorisationClick}
                 >
                     <FontAwesomeIcon icon={faCheck}/>
                     Авторизоваться
                 </button>
-            </div>
+            </form>
         </LayoutBlock>
     );
 }
