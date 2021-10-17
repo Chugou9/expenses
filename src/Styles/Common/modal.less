@@ -5,15 +5,23 @@
     left: 50%;
     transform: translate(-50%, -50%);
     min-width: @base * 100;
+    display: flex;
+    flex-flow: column nowrap;
 
     &-title-container {
         margin-bottom: @base * 2;
         border-bottom: 2px orange solid;
+
+        &.modal-window-action-container {
+            padding: 4px;
+            margin-left: 4px;
+        }
     }
 
     &-title {
         font: normal @base*6 'Trebuchet MS', sans-serif !important;
         position: relative;
+        margin-right: 4px;
 
         .actions {
             position: absolute;

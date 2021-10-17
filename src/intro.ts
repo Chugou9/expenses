@@ -1,3 +1,6 @@
+import "core-js";
+import "regenerator-runtime/runtime";
+
 const application = document.createElement('div');
 
 application.className = "application";

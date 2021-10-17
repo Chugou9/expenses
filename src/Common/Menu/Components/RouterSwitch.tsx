@@ -1,19 +1,19 @@
-import {AuthContext} from "Common/Contexts/Auth.context";
 import * as React from "react";
 import {Route, Switch} from 'react-router-dom';
 import {CONFIGURATION} from "../Config/Config";
 import {ROUTES} from "../Consts";
 import AuthorisationPage from 'Modules/Authorisation/AuthorisationPage';
+import {useAuth} from "Modules/Authorisation/Auth";
 
 /**
  * Свитч, который раскидывает юзера по конкретным компонентам.
  */
 function RouterSwitch() {
-    const {token} = React.useContext(AuthContext);
+    const {user} = useAuth();
 
     return (
         <Switch>
-            {!token && (
+            {!user?.token && (
                 <Route
                     key="auth"
                     path={ROUTES.AUTHORISATION.PATH}
@@ -22,7 +22,7 @@ function RouterSwitch() {
                 />
             )}
 
-            {!!token && CONFIGURATION.map((route, index) => (
+            {!!user?.token && CONFIGURATION.map((route, index) => (
                 <Route
                     key={index}
                     exact={route.exact}

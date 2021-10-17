@@ -1,6 +1,7 @@
 .public-utility-payments-modal {
     &-title {
         position: relative;
+        padding-right: 40px;
 
         &-actions {
             position: absolute;
@@ -23,6 +24,37 @@
                 width: 35%;
                 display: inline-block !important;
             }
+        }
+    }
+
+    & .fuel-block {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-rows: 44px 44px 44px;
+
+        & .field-icon {
+            grid-row-start: 2;
+            grid-row-end: 3;
+            grid-column-start: 1;
+            grid-column-end: 2;
+            align-self: center;
+            justify-self: center;
+        }
+
+        & .data {
+            grid-column-start: 2;
+            grid-column-end: 5;
+            grid-row-start: 1;
+            grid-row-end: 4;
+        }
+    }
+
+    & .modal-body {
+        .data-block {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-between;
+            margin-bottom: 4px;
         }
     }
 }

@@ -39,7 +39,7 @@ export class FormGroup extends React.PureComponent<IOwnProps, IState> {
         } = this.props;
 
         return (
-            <div className={` ${containerClassName}`}>
+            <div className={`form-group ${containerClassName}`}>
                 <label className={` ${labelClassName}`}>{label}</label>
 
                 <div className={elementClassName}>

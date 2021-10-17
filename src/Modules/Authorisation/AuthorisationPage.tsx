@@ -1,17 +1,16 @@
-import React, {useContext, useState} from 'react';
+import React, {FormEvent, useState} from 'react';
 import {LayoutBlock} from '../../Common/Layout/Components/LayoutBlock';
 import {FormGroup} from 'Common/BuildingBlocks/FormGroup/FormGroup'
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {AuthServices} from 'Common/Services/AuthServices';
-import {AuthContext} from 'Common/Contexts/Auth.context';
+import {useAuth} from './Auth';
 
-const services = new AuthServices();
 
 const AuthorisationPage = (): JSX.Element => {
     const [passwordValue, setPasswordValue] = useState<string | undefined>(undefined);
     const [loginValue, setLoginValue] = useState<string | undefined>(undefined);
-    const {login} = useContext(AuthContext);
+    const {login: logIn, user } = useAuth();
+    console.log('user', user);
 
     function handleLoginChange(event: React.SyntheticEvent<HTMLInputElement>) {
         const value = event.currentTarget.value;
@@ -25,8 +24,9 @@ const AuthorisationPage = (): JSX.Element => {
         setPasswordValue(value);
     }
 
-    const handleAuthorisationClick = () => {
-        services.logIn({email: loginValue, password: passwordValue}, login);
+    async function handleAuthorisationClick(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        await logIn({email: loginValue, password: passwordValue});
     }
 
     return (
@@ -62,7 +62,6 @@ const AuthorisationPage = (): JSX.Element => {
                     type="submit"
                     title="Авторизоваться"
                     className="btn btn-success"
-                    onClick={handleAuthorisationClick}
                 >
                     <FontAwesomeIcon icon={faCheck}/>
                     Авторизоваться

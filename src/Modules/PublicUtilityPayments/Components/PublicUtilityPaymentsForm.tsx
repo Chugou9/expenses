@@ -25,7 +25,7 @@ import isEmpty from 'lodash.isempty';
 interface IOwnProps {
     services: PublicUtilityPaymentsServices;
     publicUtilityPayments: IPublicUtilityMonthPayments[];
-    onRefreshData: () => void;
+    onRefreshData?: () => void;
 }
 
 /**
@@ -240,7 +240,6 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
     renderFields = () => {
         const {electricity, gas} = PublicUtilityPaymentsFormFields;
         const {currentMonthUtilityPayments} = this.state;
-        const result: JSX.Element[] = [];
 
         const renderSimple = (label: string, placeholder: string, field: keyof IPublicUtilityMonthPayments) => {
             const value: number = currentMonthUtilityPayments[field] as number;
@@ -288,14 +287,13 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             const {electricity: data} = currentMonthUtilityPayments;
 
             return (
-                <div className="col-xs-12">
-                    <hr className="dashed" />
+                <div className="fuel-block">
 
-                    <div className="col-xs-2 field-icon">
+                    <div className="field-icon">
                         <FontAwesomeIcon icon={faLightbulb} title={electricity.subheader as string}/>
                     </div>
 
-                    <div className="col-xs-10">
+                    <div className="data">
                         <FormGroup
                             label={(electricity.actualSum as IFormFieldToRender).label}
                             labelClassName="col-xs-4"
@@ -333,14 +331,13 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             const {gas: data} = currentMonthUtilityPayments;
 
             return (
-                <div className="col-xs-12">
-                    <hr className="dashed" />
+                <div className="fuel-block">
 
-                    <div className="col-xs-2 field-icon">
+                    <div className="field-icon">
                         <FontAwesomeIcon icon={faFire} title={gas.subheader as string}/>
                     </div>
 
-                    <div className="col-xs-10">
+                    <div className="data">
                         <FormGroup
                             label={(gas.actualSum as IFormFieldToRender).label}
                             labelClassName="col-xs-4"
@@ -373,31 +370,32 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             );
         }
 
-        PublicUtilityPaymentsFormFields && Object.keys(PublicUtilityPaymentsFormFields).forEach((key: string) => {
-            if(key === 'month') {
-                result.push(renderMonth(
-                    PublicUtilityPaymentsFormFields[key].label as string,
-                    PublicUtilityPaymentsFormFields[key].placeholder as string,
-                    key as keyof IPublicUtilityMonthPayments
-                    )
-                );
-            } else if (key === 'electricity') {
-                result.push(renderElectricityField());
-            } else if (key === 'gas') {
-                result.push(renderGasField());
-                result.push(<hr />)
-            } else {
-                result.push(
-                    renderSimple(
-                        PublicUtilityPaymentsFormFields[key].label as string,
-                        PublicUtilityPaymentsFormFields[key].placeholder as string,
-                        key as keyof IPublicUtilityMonthPayments
-                    )
-                );
-            }
-        });
-
-        return <React.Fragment>{result}</React.Fragment>;
+        return PublicUtilityPaymentsFormFields &&
+        (
+            <div className="modal-body">        
+                {renderMonth(
+                        PublicUtilityPaymentsFormFields.month.label as string,
+                        PublicUtilityPaymentsFormFields.month.placeholder as string,
+                        'month'
+                        )
+                }
+                <hr className="dashed" />
+                <div className="data-block">
+                    {renderElectricityField()}
+                    {renderGasField()}
+                </div>
+                {renderSimple(
+                    PublicUtilityPaymentsFormFields.hus.label as string,
+                    PublicUtilityPaymentsFormFields.hus.placeholder as string,
+                    'hus'
+                )}
+                {renderSimple(
+                    PublicUtilityPaymentsFormFields.rent.label as string,
+                    PublicUtilityPaymentsFormFields.rent.placeholder as string,
+                    'rent'
+                )}
+            </div>
+        ) 
     };
 
     /**

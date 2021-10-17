@@ -6,19 +6,30 @@ import isEmpty from 'lodash.isempty';
  * @param {string} path Путь для запроса.
  * @param {any} params Доп параметры.
  */
-export const POST = (path: string, params?: any) => {
-    return fetch(path, {
-        method: 'POST',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        // redirect: 'follow',
-        referrer: 'no-referrer',
-        body: JSON.stringify(params)
-    }).then(response => response.json());
+export async function POST(path: string, params?: any) {
+    try {
+        let response = await fetch(path, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'default',
+            // credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'error',
+            // referrer: 'no-referrer',
+            body: JSON.stringify(params)
+        });
+        console.log('response', response);
+        if (response.ok) {
+            
+            return await response.json();
+        }
+
+    } catch (error) {
+        console.error('Post', error);
+        throw new Error(error);
+    }
 };
 
 /**
@@ -36,8 +47,8 @@ export const PUT = (path: string, params?: any) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        redirect: 'follow',
-        referrer: 'no-referrer',
+        // redirect: 'follow',
+        // referrer: 'no-referrer',
         body: JSON.stringify(params)
     }).then(response => response.json());
 };
@@ -62,8 +73,8 @@ export const GET = (path: string, options?: any) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        redirect: 'follow',
-        referrer: 'no-referrer',
+        // redirect: 'follow',
+        // referrer: 'no-referrer',
     }).then(response => response.json());
 };
 

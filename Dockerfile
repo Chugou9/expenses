@@ -1,4 +1,4 @@
-FROM node:15.8.0 as build
+FROM node:16.8.0 as build
 
 RUN mkdir -p /app
 WORKDIR /app

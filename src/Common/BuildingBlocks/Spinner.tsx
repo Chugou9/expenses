@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {ClockLoader} from 'react-spinners';
-import {css} from '@emotion/core';
+import {css} from '@emotion/react';
 
 /**
  * Модель собсвтенных свойств компонента.

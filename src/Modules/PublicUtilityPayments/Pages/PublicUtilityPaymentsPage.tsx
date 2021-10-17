@@ -1,75 +1,33 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {PublicUtilityPaymentsServices} from '../Services/PublicUtilityPaymentsServices';
 import {PublicUtilityPaymentsForm} from '../Components/PublicUtilityPaymentsForm';
 import { DEFAULT_PUBLIC_UTILITY_REQUEST } from '../Consts';
-import { IPublicUtilityMonthPayments } from 'Models/PublicUtilityPayments';
 import { PageOverlay } from 'Common/PageOverlay/PageOverlay';
-import cloneDeep from 'lodash.clonedeep';
+import {useQuery} from 'react-query';
 
 const services = new PublicUtilityPaymentsServices();
 
 /**
- * Модель собственных свойств компонента.
- */
-interface IOwnProps {}
-
-/**
- * Модель общего состояния для компонента.
- *
- * @prop {IPublicUtilityMonthPayments[]} [publicUtilityPayments] Данные о коммунальных платежах.
- * @prop {boolean} [isLoading] Идет ли загрузка в данный момент.
- */
-interface IState {
-    publicUtilityPayments?: IPublicUtilityMonthPayments[] | null;
-    isLoading?: boolean;
-}
-
-/**
  * Страница, отображающая коммунальные платежи.
  */
-export class PublicUtilityPaymentsPage extends React.PureComponent<IOwnProps, IState> {
+export const PublicUtilityPaymentsPage: React.FunctionComponent = function() {
+    const {isLoading, data:publicUtilityPayments, error, refetch} = useQuery('PublicUtilityPayments', () => services.getAllPublicUtilityPaymentsData(DEFAULT_PUBLIC_UTILITY_REQUEST));
 
-    constructor(props: IOwnProps) {
-        super(props);
+    useEffect(function () {
+        if (error) {
+            throw new Error(error as string);
+        }
+    }, [error])
 
-        this.state = {publicUtilityPayments: null, isLoading: true}
-    }
+    return (
+        <React.Fragment>
+            <PageOverlay show={isLoading}/>
 
-    componentDidMount() {
-        this.handleGetAllData();
-    }
-
-    /**
-     * Получить все данные по коммунальным платежам за текущий год.
-     */
-    handleGetAllData = () => {
-        this.setState({isLoading: true},
-            () => services.getAllPublicUtilityPaymentsData(DEFAULT_PUBLIC_UTILITY_REQUEST).then(
-                (data) => {
-                    this.setState({publicUtilityPayments: cloneDeep(data), isLoading: false});
-                },
-                (error) => {
-                    this.setState({isLoading: false});
-
-                    throw new Error(error);
-                }
-            )
-        );
-    }
-
-    render() {
-        const {publicUtilityPayments, isLoading} = this.state;
-
-        return (
-            <React.Fragment>
-                <PageOverlay show={isLoading!}/>
-
-                <PublicUtilityPaymentsForm
-                    publicUtilityPayments={publicUtilityPayments!}
-                    services={services}
-                    onRefreshData={this.handleGetAllData}
-                />
-            </React.Fragment>
-        );
-    }
+            <PublicUtilityPaymentsForm
+                publicUtilityPayments={publicUtilityPayments!}
+                services={services}
+                onRefreshData={refetch}
+            />
+        </React.Fragment>
+    );
 }

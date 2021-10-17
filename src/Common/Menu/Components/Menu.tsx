@@ -5,20 +5,15 @@ import RouterSwitch from './RouterSwitch';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCompass} from '@fortawesome/free-solid-svg-icons';
 import { ROUTES } from '../Consts';
-import {useAuth} from '../../Hooks/Auth.hook';
-import {AuthContext} from '../../Contexts/Auth.context';
+import {useAuth} from 'Modules/Authorisation/Auth';
 
 /**
  * Компонент, возвращающий меню с роутером.
  */
 function Menu<IOwnProps>({}: IOwnProps) {
-    const [firstLogin, setFirstLogin] = React.useState<boolean>(true);
+    // const [firstLogin, setFirstLogin] = React.useState<boolean>(true);
     const [isMenuShown, setIsMenuShown] = React.useState<boolean>(false);
-    const [token, userId, login, logout] = useAuth();
-
-    React.useEffect(() => {
-        setFirstLogin(false);
-    }, []);
+    const {user} = useAuth();
 
     /**
      * Обработчик открытия меню.
@@ -35,33 +30,23 @@ function Menu<IOwnProps>({}: IOwnProps) {
     };
 
     return (
-        <AuthContext.Provider
-            value={{
-                token: token,
-                userId: userId,
-                login: login,
-                logout: logout,
-                isAuthentificated: !!token
-            }}
-        >
-            <div className="menu">
-                <FontAwesomeIcon
-                    className="menu-icon fa-sm"
-                    icon={faCompass}
-                    onClick={handleOpenMenu}
-                />
+        <div className="menu">
+            <FontAwesomeIcon
+                className="menu-icon fa-sm"
+                icon={faCompass}
+                onClick={handleOpenMenu}
+            />
 
-                <MemoryRouter>
-                    <React.Fragment>
-                        {firstLogin && !token && <Redirect to={{pathname: ROUTES.AUTHORISATION.PATH}} />}
-                        {firstLogin && !!token && <Redirect to={{pathname: ROUTES.PUBLIC_UTILITY_PAYMENTS.PATH}} />}
-                        <NavLinks className={isMenuShown ? 'menu-expanding' : 'menu-collapsing'}/>
+            <MemoryRouter>
+                <React.Fragment>
+                    {!user?.token && <Redirect to={{pathname: ROUTES.AUTHORISATION.PATH}} />}
+                    {!!user?.token && <Redirect to={{pathname: ROUTES.PUBLIC_UTILITY_PAYMENTS.PATH}} />}
+                    <NavLinks className={isMenuShown ? 'menu-expanding' : 'menu-collapsing'}/>
 
-                        <RouterSwitch/>
-                    </React.Fragment>
-                </MemoryRouter>
-            </div>
-        </AuthContext.Provider>
+                    <RouterSwitch/>
+                </React.Fragment>
+            </MemoryRouter>
+        </div>
     );
 }
 

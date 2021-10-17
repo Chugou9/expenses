@@ -36,7 +36,10 @@ module.exports = {
         }),
         new CleanWebpackPlugin(),
         new ForkTsCheckerWebpackPlugin({
-            tslint: true
+          typescript:  {
+            enabled:true,
+            memoryLimit: 4096
+          }
         }),
     ],
     module: {
