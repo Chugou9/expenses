@@ -13,7 +13,7 @@ export class PublicUtilityPaymentsServices {
      * @param {IPublicUtilityMonthPayments} newPublicUtilityPayments Новые данные по платежам за текущий месяц.
      */
     saveNewPublicUtilityPayments = (newPublicUtilityPayments: IPublicUtilityMonthPayments): Promise<IPublicUtilityMonthPayments> => {
-        return POST(`${SERVER_PATH}/public-utility-payments`, newPublicUtilityPayments).then(
+        return POST<IPublicUtilityMonthPayments>(`${SERVER_PATH}/public-utility-payments`, newPublicUtilityPayments).then(
             (response) => {
                 this.getAllPublicUtilityPaymentsData()
                 return response;
@@ -24,7 +24,7 @@ export class PublicUtilityPaymentsServices {
      * Получение всех данных по коммунальным платежам.
      */
     getAllPublicUtilityPaymentsData = (request: IPublicUtilityPaymentsFilter = {year: new Date().getFullYear()}): Promise<IPublicUtilityMonthPayments[]> => {
-        return GET(`${SERVER_PATH}/public-utility-payments`, request);
+        return GET<IPublicUtilityMonthPayments[]>(`${SERVER_PATH}/public-utility-payments`, request);
     };
 
     /**
@@ -33,7 +33,7 @@ export class PublicUtilityPaymentsServices {
      * @param {IPublicUtilityMonthPayments} editedPublicUtilityPayments Обновленные данные по платежам за текущий месяц.
      */
     updatePublicUtilityPayments = (editedPublicUtilityPayments: IPublicUtilityMonthPayments): Promise<IPublicUtilityMonthPayments> => {
-        return PUT(`${SERVER_PATH}/public-utility-payments/${editedPublicUtilityPayments._id}`, editedPublicUtilityPayments).then(
+        return PUT<IPublicUtilityMonthPayments>(`${SERVER_PATH}/public-utility-payments/${editedPublicUtilityPayments._id}`, editedPublicUtilityPayments).then(
             (response) => {
                 this.getAllPublicUtilityPaymentsData()
                 return response;

@@ -1,4 +1,5 @@
 import isEmpty from 'lodash.isempty';
+import axios from 'axios';
 
 /**
  * Реализация POST метода REST API.
@@ -6,19 +7,10 @@ import isEmpty from 'lodash.isempty';
  * @param {string} path Путь для запроса.
  * @param {any} params Доп параметры.
  */
-export const POST = (path: string, params?: any) => {
-    return fetch(path, {
-        method: 'POST',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        redirect: 'follow',
-        referrer: 'no-referrer',
-        body: JSON.stringify(params)
-    }).then(response => response.json());
+export const POST = <T>(path: string, params?: any) => {
+    const url = new URL(path);
+    return axios.post<T>(url.toString(), params)
+        .then(response => response?.data);
 };
 
 /**
@@ -27,19 +19,8 @@ export const POST = (path: string, params?: any) => {
  * @param {string} path Путь для запроса.
  * @param {any} params Доп параметры.
  */
-export const PUT = (path: string, params?: any) => {
-    return fetch(path, {
-        method: 'PUT',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        redirect: 'follow',
-        referrer: 'no-referrer',
-        body: JSON.stringify(params)
-    }).then(response => response.json());
+export const PUT = <T>(path: string, params?: any) => {
+    return axios.put<T>(path, params).then(response => response.data);
 };
 
 /**
@@ -47,24 +28,14 @@ export const PUT = (path: string, params?: any) => {
  *
  * @param {string} path Путь для запроса.
  */
-export const GET = (path: string, options?: any) => {
+export const GET = <T>(path: string, options?: any) => {
     const url = new URL(path);
 
     if (!isEmpty(options)) {
         Object.keys(options).forEach((key) => url.searchParams.append(key, options[key]));
     }
 
-    return fetch(url.toString(), {
-        method: 'GET',
-        mode: 'cors',
-        cache: 'reload',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        redirect: 'follow',
-        referrer: 'no-referrer',
-    }).then(response => response.json());
+    return axios.get<T>(url.toString()).then(response => response.data);
 };
 
 /**

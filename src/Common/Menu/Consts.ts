@@ -10,10 +10,6 @@ export const ROUTES = {
         PATH: '/public-utility-payments',
         NAME: 'Коммунальные платежи'
     },
-    CHAT: {
-        PATH: '/chat',
-        NAME: 'Чат'
-    },
     AUTHORISATION: {
         PATH: '/auth',
         NAME: 'Авторизация'

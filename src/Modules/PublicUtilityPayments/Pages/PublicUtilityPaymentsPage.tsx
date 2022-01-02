@@ -42,9 +42,10 @@ export class PublicUtilityPaymentsPage extends React.PureComponent<IOwnProps, IS
     /**
      * Получить все данные по коммунальным платежам за текущий год.
      */
-    handleGetAllData = () => {
+    handleGetAllData = (year?: number) => {
+        const request = year ? {year} : DEFAULT_PUBLIC_UTILITY_REQUEST;
         this.setState({isLoading: true},
-            () => services.getAllPublicUtilityPaymentsData(DEFAULT_PUBLIC_UTILITY_REQUEST).then(
+            () => services.getAllPublicUtilityPaymentsData(request).then(
                 (data) => {
                     this.setState({publicUtilityPayments: cloneDeep(data), isLoading: false});
                 },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {MemoryRouter, Redirect} from 'react-router-dom';
+import {MemoryRouter, Navigate} from 'react-router-dom';
 import {NavLinks} from './NavLinks';
 import RouterSwitch from './RouterSwitch';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -14,7 +14,7 @@ import {AuthContext} from '../../Contexts/Auth.context';
 function Menu<IOwnProps>({}: IOwnProps) {
     const [firstLogin, setFirstLogin] = React.useState<boolean>(true);
     const [isMenuShown, setIsMenuShown] = React.useState<boolean>(false);
-    const [token, userId, login, logout] = useAuth();
+    const [userId, login, logout] = useAuth();
 
     React.useEffect(() => {
         setFirstLogin(false);
@@ -37,11 +37,10 @@ function Menu<IOwnProps>({}: IOwnProps) {
     return (
         <AuthContext.Provider
             value={{
-                token: token,
                 userId: userId,
                 login: login,
                 logout: logout,
-                isAuthentificated: !!token
+                isAuthentificated: !!userId
             }}
         >
             <div className="menu">
@@ -53,8 +52,8 @@ function Menu<IOwnProps>({}: IOwnProps) {
 
                 <MemoryRouter>
                     <React.Fragment>
-                        {firstLogin && !token && <Redirect to={{pathname: ROUTES.AUTHORISATION.PATH}} />}
-                        {firstLogin && !!token && <Redirect to={{pathname: ROUTES.PUBLIC_UTILITY_PAYMENTS.PATH}} />}
+                        {firstLogin && !userId && <Navigate to={{pathname: ROUTES.AUTHORISATION.PATH}} />}
+                        {firstLogin && !!userId && <Navigate to={{pathname: ROUTES.PUBLIC_UTILITY_PAYMENTS.PATH}} />}
                         <NavLinks className={isMenuShown ? 'menu-expanding' : 'menu-collapsing'}/>
 
                         <RouterSwitch/>
