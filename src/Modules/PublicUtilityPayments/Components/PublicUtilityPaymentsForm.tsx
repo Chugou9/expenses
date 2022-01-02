@@ -5,7 +5,7 @@ import {LayoutBlock} from 'Common/Layout/Components/LayoutBlock'
 import {PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS, PublicUtilityPaymentsFormFields} from '../Consts';
 import {IFormFieldToRender} from 'Models/FormModels';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faLightbulb, faFire, faPlus, faSync} from '@fortawesome/free-solid-svg-icons';
+import {faCheck, faLightbulb, faFire, faPlus, faSync, faWater} from '@fortawesome/free-solid-svg-icons';
 import {IPublicUtilityMonthPayments} from 'Models/PublicUtilityPayments';
 import {FormGroup} from 'Common/BuildingBlocks/FormGroup/FormGroup';
 import { IAbstractFuel, IAbstractOption } from 'Models/Common';
@@ -25,7 +25,7 @@ import isEmpty from 'lodash.isempty';
 interface IOwnProps {
     services: PublicUtilityPaymentsServices;
     publicUtilityPayments: IPublicUtilityMonthPayments[];
-    onRefreshData: () => void;
+    onRefreshData: (year?: number) => void;
 }
 
 /**
@@ -38,6 +38,7 @@ interface IState {
     showEditFieldsModal: boolean;
     currentMonthUtilityPayments: IPublicUtilityMonthPayments;
     modalMode: EModalMode | null;
+    showedYear: number;
 }
 
 /**
@@ -51,7 +52,8 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
         this.state = {
             showEditFieldsModal: false,
             currentMonthUtilityPayments: {},
-            modalMode: EModalMode.ADD
+            modalMode: EModalMode.ADD,
+            showedYear: new Date().getFullYear()
         };
     }
 
@@ -82,16 +84,19 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                 <tr key={`${publicUtilityPayment.month}_${publicUtilityPayment.year}`}>
                     <td>{index + 1}</td>
                     <td>{this.getMonth(publicUtilityPayment.month as number)}</td>
-                    <td>{publicUtilityPayment.electricity && publicUtilityPayment.electricity.actualSum || '-'}</td>
-                    <td>{publicUtilityPayment.electricity && publicUtilityPayment.electricity.countedSum || '-'}</td>
-                    <td>{publicUtilityPayment.electricity && publicUtilityPayment.electricity.data || '-'}</td>
-                    <td>{publicUtilityPayment.gas && publicUtilityPayment.gas.actualSum || '-'}</td>
-                    <td>{publicUtilityPayment.gas && publicUtilityPayment.gas.countedSum || '-'}</td>
-                    <td>{publicUtilityPayment.gas && publicUtilityPayment.gas.data || '-'}</td>
+                    <td>{publicUtilityPayment?.electricity?.actualSum || '-'}</td>
+                    <td>{publicUtilityPayment?.electricity?.countedSum || '-'}</td>
+                    <td>{publicUtilityPayment?.electricity?.data || '-'}</td>
+                    <td>{publicUtilityPayment?.gas?.actualSum || '-'}</td>
+                    <td>{publicUtilityPayment?.gas?.countedSum || '-'}</td>
+                    <td>{publicUtilityPayment?.gas?.data || '-'}</td>
+                    <td>{publicUtilityPayment?.water?.actualSum || '-'}</td>
+                    <td>{publicUtilityPayment?.water?.countedSum || '-'}</td>
+                    <td>{publicUtilityPayment?.water?.data || '-'}</td>
                     <td>{publicUtilityPayment.hus}</td>
                     <td>{publicUtilityPayment.rent}</td>
-                    <td>{publicUtilityPayment.sum && publicUtilityPayment.sum.actualSum || '-'}</td>
-                    <td>{publicUtilityPayment.sum && publicUtilityPayment.sum.countedSum || '-'}</td>
+                    <td>{publicUtilityPayment?.sum?.actualSum || '-'}</td>
+                    <td>{publicUtilityPayment?.sum?.countedSum || '-'}</td>
                     <td><PublicUtilityPaymentsActionPanel
                         selectedItem={publicUtilityPayment}
                         onEdit={this.handleEditPublicUtilityPayment}
@@ -238,9 +243,8 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
      * Рисует поля формы.
      */
     renderFields = () => {
-        const {electricity, gas} = PublicUtilityPaymentsFormFields;
+        const {electricity, gas, water} = PublicUtilityPaymentsFormFields;
         const {currentMonthUtilityPayments} = this.state;
-        const result: JSX.Element[] = [];
 
         const renderSimple = (label: string, placeholder: string, field: keyof IPublicUtilityMonthPayments) => {
             const value: number = currentMonthUtilityPayments[field] as number;
@@ -248,16 +252,16 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             return (
                 <FormGroup
                     label={label}
-                    labelClassName="col-xs-4"
-                    elementClassName="col-xs-8"
+                    labelClassName="public-utility-payments-modal__form-group-label"
+                    elementClassName="public-utility-payments-modal__form-group-element"
                 >
                     {Input({
                         step:0.1,
-                        className:"form-control",
                         placeholder,
                         value,
                         onChange:this.handleChangeModalField(field),
-                        type: 'number'
+                        type: 'number',
+                        className: "public-utility-payments-modal__input"
                     })}
                 </FormGroup>
             );
@@ -268,11 +272,8 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             return (
                 <FormGroup
                     label={label}
-                    labelClassName="col-xs-4"
-                    elementClassName="col-xs-8"
                 >
                     <select
-                        className="form-control"
                         placeholder={placeholder}
                         value={currentMonthUtilityPayments[field as keyof IPublicUtilityMonthPayments] as string | number}
                         onChange={this.handleSelectMonthChange}
@@ -288,22 +289,18 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             const {electricity: data} = currentMonthUtilityPayments;
 
             return (
-                <div className="col-xs-12">
-                    <hr className="dashed" />
+                <div className="public-utility-payments-modal__resource">
 
-                    <div className="col-xs-2 field-icon">
+                    <div className="fields-block__field-icon">
                         <FontAwesomeIcon icon={faLightbulb} title={electricity.subheader as string}/>
                     </div>
 
-                    <div className="col-xs-10">
+                    <div className="fields-block__inputs-container">
                         <FormGroup
                             label={(electricity.actualSum as IFormFieldToRender).label}
-                            labelClassName="col-xs-4"
-                            elementClassName="col-xs-8"
                         >
                             {Input({
                                 type:"number",
-                                className:"form-control",
                                 placeholder:(electricity.actualSum as IFormFieldToRender).placeholder as string,
                                 value:data ? data.actualSum as number : null,
                                 onChange:this.handleChangeFormField('electricity', 'actualSum')
@@ -312,12 +309,9 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
 
                         <FormGroup
                             label={(electricity.data as IFormFieldToRender).label}
-                            labelClassName="col-xs-4"
-                            elementClassName="col-xs-8"
                         >
                             {Input({
                                 type:"number",
-                                className:"form-control",
                                 placeholder:(electricity.data as IFormFieldToRender).placeholder as string,
                                 value:data ? data.data as number : null,
                                 onChange:this.handleChangeFormField('electricity', 'data')
@@ -333,22 +327,18 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             const {gas: data} = currentMonthUtilityPayments;
 
             return (
-                <div className="col-xs-12">
-                    <hr className="dashed" />
+                <div className="public-utility-payments-modal__resource">
 
-                    <div className="col-xs-2 field-icon">
+                    <div className="fields-block__field-icon">
                         <FontAwesomeIcon icon={faFire} title={gas.subheader as string}/>
                     </div>
 
-                    <div className="col-xs-10">
+                    <div className="fields-block__inputs-container">
                         <FormGroup
                             label={(gas.actualSum as IFormFieldToRender).label}
-                            labelClassName="col-xs-4"
-                            elementClassName="col-xs-8"
                         >
                             {Input({
                                 type:"number",
-                                className:"form-control",
                                 placeholder:(gas.actualSum as IFormFieldToRender).placeholder as string,
                                 value:data ? data.actualSum as number : null,
                                 onChange:this.handleChangeFormField('gas', 'actualSum')
@@ -357,12 +347,9 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
 
                         <FormGroup
                             label={(gas.data as IFormFieldToRender).label}
-                            labelClassName="col-xs-4"
-                            elementClassName="col-xs-8"
                         >
                             {Input({
                                 type:"number",
-                                className:"form-control",
                                 placeholder:(gas.data as IFormFieldToRender).placeholder as string,
                                 value:data ? data.data as number : null,
                                 onChange:this.handleChangeFormField('gas', 'data'),
@@ -373,31 +360,76 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
             );
         }
 
-        PublicUtilityPaymentsFormFields && Object.keys(PublicUtilityPaymentsFormFields).forEach((key: string) => {
-            if(key === 'month') {
-                result.push(renderMonth(
-                    PublicUtilityPaymentsFormFields[key].label as string,
-                    PublicUtilityPaymentsFormFields[key].placeholder as string,
-                    key as keyof IPublicUtilityMonthPayments
-                    )
-                );
-            } else if (key === 'electricity') {
-                result.push(renderElectricityField());
-            } else if (key === 'gas') {
-                result.push(renderGasField());
-                result.push(<hr />)
-            } else {
-                result.push(
-                    renderSimple(
-                        PublicUtilityPaymentsFormFields[key].label as string,
-                        PublicUtilityPaymentsFormFields[key].placeholder as string,
-                        key as keyof IPublicUtilityMonthPayments
-                    )
-                );
-            }
-        });
+        // Отрисовывает поля для блока "Вода".
+        const renderWaterField = () => {
+            const {water: data} = currentMonthUtilityPayments;
 
-        return <React.Fragment>{result}</React.Fragment>;
+            return (
+                <div className="fields-block public-utility-payments-modal__resource">
+
+                    <div className="fields-block__field-icon">
+                        <FontAwesomeIcon icon={faWater} title={water.subheader as string}/>
+                    </div>
+
+                    <div className="fields-block__inputs-container">
+                        <FormGroup
+                            label={(water.actualSum as IFormFieldToRender).label}
+                        >
+                            {Input({
+                                type:"number",
+                                placeholder:(water.actualSum as IFormFieldToRender).placeholder as string,
+                                value:data ? data.actualSum as number : null,
+                                onChange:this.handleChangeFormField('water', 'actualSum')
+                            })}
+                        </FormGroup>
+
+                        <FormGroup
+                            label={(water.data as IFormFieldToRender).label}
+                        >
+                            {Input({
+                                type:"number",
+                                placeholder:(water.data as IFormFieldToRender).placeholder as string,
+                                value:data ? data.data as number : null,
+                                onChange:this.handleChangeFormField('water', 'data'),
+                            })}
+                        </FormGroup>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="public-utility-payments-modal__body">
+                {renderMonth(
+                    PublicUtilityPaymentsFormFields.month.label as string,
+                    PublicUtilityPaymentsFormFields.month.placeholder as string,
+                    'month' as keyof IPublicUtilityMonthPayments
+                    )
+                }
+                <hr />
+                <div className="public-utility-payments-modal__row">
+                    {renderSimple(
+                        PublicUtilityPaymentsFormFields.hus.label as string,
+                        PublicUtilityPaymentsFormFields.hus.placeholder as string,
+                        'hus' as keyof IPublicUtilityMonthPayments
+                    )}
+                    {renderSimple(
+                        PublicUtilityPaymentsFormFields.rent.label as string,
+                        PublicUtilityPaymentsFormFields.rent.placeholder as string,
+                        'rent' as keyof IPublicUtilityMonthPayments
+                    )}
+                </div>
+                <hr/>
+                <div className="public-utility-payments-modal__row">
+                    {renderElectricityField()}
+                    {renderGasField()}
+                </div>
+                <hr />
+                <div className="public-utility-payments-modal__row">
+                    {renderWaterField()}
+                </div>
+            </div>
+        );
     };
 
     /**
@@ -442,7 +474,8 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
     renderEditModalTitle = () => {
         const {currentMonthUtilityPayments: {
             gas,
-            electricity
+            electricity,
+            water
         }} = this.state;
 
         return (
@@ -456,16 +489,27 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                         <FontAwesomeIcon className="mr-1" icon={faFire}/>
                         {Input({
                             className: 'rate-input form-control',
-                            value: gas ? gas.rate as number : null,
-                            onChange: this.handleChangeFormField('gas', 'rate')
+                            value: gas?.rate ?? null,
+                            onChange: this.handleChangeFormField('gas', 'rate'),
+                            type: 'number'
                         })}
                     </div>
                     <div className="row mt-1">
                         <FontAwesomeIcon className="mr-1" icon={faLightbulb}/>
                         {Input({
                             className: 'rate-input form-control',
-                            value: electricity ? electricity.rate as number : null,
-                            onChange: this.handleChangeFormField('electricity', 'rate')
+                            value: electricity?.rate ?? null,
+                            onChange: this.handleChangeFormField('electricity', 'rate'),
+                            type: "number"
+                        })}
+                    </div>
+                    <div className="row mt-1">
+                        <FontAwesomeIcon className="mr-1" icon={faWater}/>
+                        {Input({
+                            className: 'rate-input form-control',
+                            value: water?.rate ?? null,
+                            onChange: this.handleChangeFormField('water', 'rate'),
+                            type: "number"
                         })}
                     </div>
                 </div>
@@ -488,9 +532,15 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
         );
     }
 
+    handleShowedYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = parseInt(event.target.value);
+
+        this.setState({showedYear: value}, () => this.props.onRefreshData(value));
+    }
+
     render() {
         const {publicUtilityPayments, onRefreshData} = this.props;
-        const {showEditFieldsModal} = this.state;
+        const {showEditFieldsModal, showedYear} = this.state;
 
         return (
             <LayoutBlock>
@@ -501,6 +551,31 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                         </div>
 
                         <div className="form-title-action-container">
+                            <select
+                                className="form-control"
+                                placeholder="Год"
+                                value={showedYear}
+                                onChange={this.handleShowedYearChange}
+                            >
+                                {[
+                                    {
+                                        value: 2019,
+                                        label: '2019'
+                                    },
+                                                         {
+                                        value: 2020,
+                                        label: '2020'
+                                    },
+                                                         {
+                                        value: 2021,
+                                        label: '2021'
+                                    },
+                                                         {
+                                        value: 2022,
+                                        label: '2022'
+                                    }
+                                ].map((option) => <option key={option.label} label={option.label} value={option.value} title={option.label}>{option.label}</option>)}
+                            </select>
                             <button
                                 className="btn btn-icon mb-2"
                                 title="Добавить"
@@ -515,7 +590,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                             <button
                                 className="btn btn-icon mb-2 ml-1"
                                 title="Обновить"
-                                onClick={onRefreshData}
+                                onClick={() => onRefreshData(showedYear)}
                                 tabIndex={2}
                             >
                                 <FontAwesomeIcon 

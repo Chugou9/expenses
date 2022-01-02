@@ -14,6 +14,7 @@ export interface IPublicUtilityMonthPayments {
     sum?: IAbstractSum;
     year?: number;
     _id?: number | string;
+    water?: IAbstractFuel;
 }
 
 /**

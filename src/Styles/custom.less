@@ -2,8 +2,20 @@
 
 @Gap: @base*3;
 
-.form-group {
-    margin-bottom: @Gap;
+.form-group-for-input {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 0 @base*2;
+
+    &__control-label {
+        flex: 1 0 24px;
+        margin: 0;
+        padding-right: @base*2;
+    }
+
+    &__input-container {
+        flex: 4 4;
+    }
 }
 
 .row,

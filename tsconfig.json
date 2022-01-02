@@ -1,5 +1,5 @@
 {
-    "compilerOptions": {
+	"compilerOptions": {
 		// Target latest version of ECMAScript.
 		"target": "esnext",
 		// path to output directory
@@ -39,8 +39,8 @@
 		"forceConsistentCasingInFileNames": true,
 		"importHelpers": true
 	},
-    "files": [
-        "./src/intro.ts",
-        "./src/index.tsx"
-    ]
+	"files": [
+		"./src/intro.ts",
+		"./src/index.tsx"
+	]
 }

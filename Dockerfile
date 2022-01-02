@@ -1,11 +1,12 @@
-FROM node:15.8.0 as build
+FROM node:16.13.1 as build
 
 RUN mkdir -p /app
 WORKDIR /app
-COPY . /app/
+COPY ./package.json ./
 
 RUN npm i
-RUN npm run start
+COPY . .
+RUN npm start
 
 FROM nginx:1.15.8-alpine
 

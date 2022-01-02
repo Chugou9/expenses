@@ -8,9 +8,9 @@ import * as React from 'react';
  * @prop {string} label Кастомное наименование.
  */
 interface IOwnProps {
-    labelClassName: string;
-    elementClassName: string;
-    label: string;
+    labelClassName?: string;
+    elementClassName?: string;
+    label?: string;
 }
 
 /**
@@ -22,23 +22,18 @@ interface IState {}
  * Компонент form-group.
  */
 export class FormGroup extends React.PureComponent<IOwnProps, IState> {
-    static defaultProps: Partial<IOwnProps> = {
-        labelClassName: "col-xs-2",
-        elementClassName: "col-xs-10"
-    };
-
     render() {
         const {
-            label,
+            label = '',
             labelClassName,
             elementClassName
         } = this.props;
 
         return (
-            <div className="form-group">
-                <label className={`control-label ${labelClassName}`}>{label}</label>
+            <div className="form-group-for-input">
+                <label className={`form-group-for-input__control-label ${labelClassName}`}>{label}</label>
 
-                <div className={elementClassName}>
+                <div className={`form-group-for-input__input-container ${elementClassName}`}>
                     {this.props.children}
                 </div>
             </div>

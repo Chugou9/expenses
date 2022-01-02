@@ -1,21 +1,27 @@
 .public-utility-payments-modal {
-    &-title {
-        position: relative;
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    min-width: 0;
+    width: 100%;
+    }
 
+    /* Firefox */
+    input[type=number] {
+    -moz-appearance: textfield;
+    min-width: 0;
+    width: 100%
+    }
+
+    &-title {
+        display: flex;
         &-actions {
-            position: absolute;
-            right: 0;
-            top: @base*2;
+            flex-flow: row nowrap;
+            flex-shrink: 0;
             font-size: @base*3 !important;
             text-align: center;
-         
-            .label {
-                font-style: italic;
-                color: black;
-                text-align: center;
-                margin: 0;
-                padding: 0;
-            }
 
             .rate-input {
                 font-size: @base*3 !important;
@@ -24,5 +30,50 @@
                 display: inline-block !important;
             }
         }
+    }
+
+    &__resources {
+        display: flex;
+        flex-flow: row wrap;
+    }
+
+    &__resource {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        padding: 0 8px;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+
+        & > *:nth-child(n) {
+            margin-bottom: 8px;
+        }
+    }
+
+    &__form-group-label {
+        padding-right: @base;
+        padding: 0;
+        margin: 0;
+    }
+
+    &__row {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+    }
+}
+
+.fields-block {
+    color: black;
+    &__field-icon {
+        flex: 1 3;
+    }
+
+    &__inputs-container {
+        flex: 8 4;
     }
 }

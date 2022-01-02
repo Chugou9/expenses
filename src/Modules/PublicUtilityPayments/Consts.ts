@@ -20,6 +20,12 @@ export const PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS: ITableColumnsConfig = {
         countedSum: 'Примерная сумма',
         data: 'Показания счетчика'
     },
+    water: {
+        title: 'Вода',
+        actualSum: 'Фактическая сумма',
+        countedSum: 'Примерная сумма',
+        data: 'Показания счетчика'
+    },
     hus: 'ТСЖ', // housing and utility services
     rent: 'Арендная плата',
     sum: {
@@ -35,6 +41,14 @@ export const PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS: ITableColumnsConfig = {
 export const PublicUtilityPaymentsFormFields: IFormFieldsToRenderConfig = {
     month: {
         label: "Месяц"
+    },
+    hus: {
+        label:'ТСЖ', // housing and utility services
+        placeholder: 'Введите сумму'
+    },
+    rent: {
+        label: 'Арендная плата',
+        placeholder: 'Введите сумму арендной платы'
     },
     electricity: {
         subheader: 'Электричество',
@@ -58,14 +72,17 @@ export const PublicUtilityPaymentsFormFields: IFormFieldsToRenderConfig = {
             placeholder: 'Введите показания счетчика'
         }
     },
-    hus: {
-        label:'ТСЖ', // housing and utility services
-        placeholder: 'Введите сумму'
+    water: {
+        subheader: 'Вода',
+        actualSum: {
+            label: 'Фактическая сумма',
+            placeholder: 'Введите фактическую сумму'
+        },
+        data: {
+            label: 'Показания счетчика',
+            placeholder: 'Введите показания счетчика'
+        }
     },
-    rent: {
-        label: 'Арендная плата',
-        placeholder: 'Введите сумму арендной платы'
-    }
 };
 
 /**

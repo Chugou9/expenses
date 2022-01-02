@@ -5,6 +5,8 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {AuthServices} from 'Common/Services/AuthServices';
 import {AuthContext} from 'Common/Contexts/Auth.context';
+import {ROUTES} from 'Common/Menu/Consts';
+import {useNavigate} from 'react-router';
 
 const services = new AuthServices();
 
@@ -12,6 +14,7 @@ const AuthorisationPage = (): JSX.Element => {
     const [passwordValue, setPasswordValue] = useState<string | undefined>(undefined);
     const [loginValue, setLoginValue] = useState<string | undefined>(undefined);
     const {login} = useContext(AuthContext);
+    const navigate = useNavigate();
 
     function handleLoginChange(event: React.SyntheticEvent<HTMLInputElement>) {
         const value = event.currentTarget.value;
@@ -27,6 +30,7 @@ const AuthorisationPage = (): JSX.Element => {
 
     function handleAuthorisationClick() {
         services.logIn({email: loginValue, password: passwordValue}, login);
+        navigate(ROUTES.PUBLIC_UTILITY_PAYMENTS.PATH);
     }
 
     return (

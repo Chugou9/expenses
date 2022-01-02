@@ -1,36 +1,33 @@
-import {useState, useEffect, useCallback} from 'react';
+import {useState, useCallback} from 'react';
 
 const storageName = 'userData';
 
-export const useAuth = (): [string | null, string | null, (jwt: string | null, id: string | null) => void, () => void] => {
-  const [token, setToken] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
+function getUserIdFromStorage() {
+  const userData = JSON.parse(localStorage.getItem(storageName) as string);
+
+  if (userData?.userId) {
+    return userData.userId;
+  }
+
+  return null;
+}
+
+export const useAuth = (): [string | null, (id: string | null) => void, () => void] => {
+  const [userId, setUserId] = useState<string | null>(getUserIdFromStorage);
   
-  const login = useCallback((jwt, id) => {
-    setToken(jwt);
+  const login = useCallback((id: string | null) => {
     setUserId(id);
 
     localStorage.setItem(storageName, JSON.stringify({
-      token,
-      userId
+      userId: id
     }));
   }, []);
 
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem(storageName) as string);
-
-    if (userData && userData.token) {
-      login(userData.token, userData.userId);
-    }
-  }, [login]);
-
-
   const logout = useCallback(() => {
     setUserId(null);
-    setToken(null);
 
     localStorage.removeItem(storageName);
   }, []);
 
-  return [token, userId, login, logout];
+  return [userId, login, logout];
 }
