@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch --config webpack.config.js",
     "start": "webpack --config webpack.config.js",
-    "start1": "webpack-dev-server --config webpack.config.js --open",
+    "start1": "webpack serve --config webpack.config.js --open",
     "prod": "webpack --config webpack.config.prod.js",
     "buil": "npm run test1 test2 test && webpack-dev-server --config webpack.config.js --open && echo \"Npm started\"",
     "test1": "npm i --save-dev webpack webpack-cli",

@@ -8,11 +8,9 @@ module.exports = {
   context: __dirname,
   mode: "development",
   devtool: "cheap-module-source-map",
-  // devServer: {
-  //   contentBase: './dist',
-  //   port: 8081,
-  //   host: '0.0.0.0'
-  // },
+  devServer: {
+    static: './dist',
+  },
   resolve: {
     extensions: [".ts", ".tsx", '.js', '.jsx', '.css', '.less'],
     alias: {
