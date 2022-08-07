@@ -2,11 +2,10 @@ import * as React from 'react';
 import {MemoryRouter, Navigate} from 'react-router-dom';
 import {NavLinks} from './NavLinks';
 import RouterSwitch from './RouterSwitch';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCompass} from '@fortawesome/free-solid-svg-icons';
 import { ROUTES } from '../Consts';
 import {useAuth} from '../../Hooks/Auth.hook';
 import {AuthContext} from '../../Contexts/Auth.context';
+import {CompassIcon} from 'Common/BuildingBlocks/Icon'
 
 /**
  * Компонент, возвращающий меню с роутером.
@@ -44,11 +43,9 @@ function Menu<IOwnProps>({}: IOwnProps) {
             }}
         >
             <div className="menu">
-                <FontAwesomeIcon
-                    className="menu-icon fa-sm"
-                    icon={faCompass}
-                    onClick={handleOpenMenu}
-                />
+                <p onClick={handleOpenMenu}>
+                    <CompassIcon/>    
+                </p>
 
                 <MemoryRouter>
                     <React.Fragment>

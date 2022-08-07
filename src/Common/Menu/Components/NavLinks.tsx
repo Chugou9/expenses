@@ -1,8 +1,7 @@
 import * as React from "react";
 import {CONFIGURATION} from "../Config/Config";
 import {Link} from "react-router-dom";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { Icon } from "Common/BuildingBlocks/Icon";
 
 /**
  * Модель собственных свойств компонента.
@@ -32,7 +31,7 @@ export class NavLinks extends React.PureComponent<IOwnProps, IState> {
                     {CONFIGURATION.map((link) => (
                         <li key={link.path}>
                             <Link to={link.path}>
-                                <FontAwesomeIcon icon={link.icon as IconDefinition} />
+                                <Icon iconName={link.icon} />
                             </Link>
                         </li>
                     ))}

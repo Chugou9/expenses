@@ -1,7 +1,6 @@
+import { Cross } from 'Common/BuildingBlocks/Icon';
 import * as React from 'react';
 import {LayoutBlock} from '../Layout/Components/LayoutBlock';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 /**
  * Модель собственных свойств компонента.
@@ -53,7 +52,7 @@ export class ModalWindow extends React.PureComponent<IOwnProps, IState> {
                             title="Закрыть"
                             onClick={onClose}
                         >
-                            <FontAwesomeIcon icon={faTimes} className="fa-lg" />
+                            <Cross />
                         </button>
                     </div>
                 </div>

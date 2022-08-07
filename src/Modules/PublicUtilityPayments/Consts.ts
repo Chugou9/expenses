@@ -1,6 +1,7 @@
 import {ITableColumnsConfig} from "../../Common/Table/Models";
 import {IFormFieldsToRenderConfig} from 'Models/FormModels';
 import {IPublicUtilityPaymentsFilter} from 'Models/PublicUtilityPayments';
+import { EIcons } from "Enums";
 
 /**
  * Конфигурация столбцов для коммуналки.
@@ -12,25 +13,29 @@ export const PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS: ITableColumnsConfig = {
         title: 'Электричество',
         actualSum: 'Фактическая сумма',
         countedSum: 'Примерная сумма',
-        data: 'Показания счетчика'
+        data: 'Показания счетчика',
+        icon: EIcons.BULB_ICON
     },
     gas: {
         title: 'Газ',
         actualSum: 'Фактическая сумма',
         countedSum: 'Примерная сумма',
-        data: 'Показания счетчика'
+        data: 'Показания счетчика',
+        icon: EIcons.FIRE_ICON
     },
     water: {
         title: 'Вода',
         actualSum: 'Фактическая сумма',
         countedSum: 'Примерная сумма',
-        data: 'Показания счетчика'
+        data: 'Показания счетчика',
+        icon: EIcons.WATER_VALVE_ICON,
     },
     hus: 'ТСЖ', // housing and utility services
     rent: 'Арендная плата',
     sum: {
         title: 'Сумма',
         actualSum: 'Фактическая',
+        actualSumIcon: EIcons.SUM_ICON,
         countedSum: 'Примерная',
     }
 };

@@ -1,3 +1,4 @@
+import { Icon } from 'Common/BuildingBlocks/Icon';
 import * as React from 'react';
 import {ITableColumnsConfig, ITableComplexColumn} from '../Models';
 
@@ -51,9 +52,10 @@ export class TableHeader extends React.PureComponent<IOwnProps, IState> {
                 if (typeof tableColumnsConfig[key] === 'string') {
                     result.push(<th key={tableColumnsConfig[key] as string} rowSpan={2}>{tableColumnsConfig[key]}</th>);
                 } else {
-                    const {title, data} = tableColumnsConfig[key] as ITableComplexColumn;
+                    const {title, data, icon, actualSumIcon} = tableColumnsConfig[key] as ITableComplexColumn;
 
-                    result.push(<th key={title} scope="colgroup" colSpan={data ? 3 : 2}>{title}</th>);
+                    icon && result.push(<th key={title} scope="colgroup" colSpan={data ? 3 : 2}>{<Icon iconName={icon} />}</th>);
+                    actualSumIcon && result.push(<th key={title} scope="colgroup" colSpan={data ? 3 : 2}>{<Icon iconName={actualSumIcon} />}</th>)
                 }
             }
         }
