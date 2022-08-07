@@ -1,12 +1,11 @@
 import React, {useContext, useState} from 'react';
 import {LayoutBlock} from '../../Common/Layout/Components/LayoutBlock';
 import {FormGroup} from 'Common/BuildingBlocks/FormGroup/FormGroup'
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {AuthServices} from 'Common/Services/AuthServices';
 import {AuthContext} from 'Common/Contexts/Auth.context';
 import {ROUTES} from 'Common/Menu/Consts';
 import {useNavigate} from 'react-router';
+import { Check } from 'Common/BuildingBlocks/Icon';
 
 const services = new AuthServices();
 
@@ -61,7 +60,7 @@ const AuthorisationPage = (): JSX.Element => {
                     title="Авторизоваться"
                     className=" btn btn-success"
                 >
-                    <FontAwesomeIcon icon={faCheck}/>
+                    <Check />
                     Авторизоваться
                 </button>
             </div>

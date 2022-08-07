@@ -1,3 +1,5 @@
+import { EIcons } from "Enums";
+
 /**
  * Модель конфигурации столбцов таблицы.
  */
@@ -18,4 +20,6 @@ export interface ITableComplexColumn {
     actualSum: string;
     countedSum: string;
     data?: string;
+    icon?: EIcons;
+    actualSumIcon?: EIcons;
 }

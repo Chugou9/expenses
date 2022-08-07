@@ -1,9 +1,8 @@
 import { PublicUtilityPaymentsActionsProvider } from "../Actions/PublicUtilityPaymentsActionProvider";
 import * as React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {PublicUtilityPaymentsServices} from '../Services/PublicUtilityPaymentsServices';
 import {IPublicUtilityMonthPayments} from '../../../Models/PublicUtilityPayments';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { Icon } from "Common/BuildingBlocks/Icon";
 
 
 /**
@@ -30,7 +29,7 @@ export const PublicUtilityPaymentsActionPanel: React.SFC<IPublicUtilityPaymentsA
             onClick={action.action}
             className={`btn icon-btn ${action.className}`}
         >
-            <FontAwesomeIcon icon={action.icon as IconDefinition} />
+            <Icon iconName={action.icon} />
         </button>
     ));
 

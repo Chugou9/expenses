@@ -1,4 +1,4 @@
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { EIcons } from "Enums";
 
 /**
  * Обобщенная модель поля для отрисовки.
@@ -53,6 +53,6 @@ export interface IAbstractActionDescriptor {
     key: string;
     action: (param?: any) => void;
     title: string;
-    icon?: IconDefinition;
+    icon: EIcons;
     className?: string;
 }

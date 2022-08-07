@@ -4,8 +4,6 @@ import {ModalWindow} from 'Common/ModalWindow/ModalWindow';
 import {LayoutBlock} from 'Common/Layout/Components/LayoutBlock'
 import {PUBLIC_UTILITY_PAYMENTS_TABLE_COLUMNS, PublicUtilityPaymentsFormFields} from '../Consts';
 import {IFormFieldToRender} from 'Models/FormModels';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faLightbulb, faFire, faPlus, faSync, faWater} from '@fortawesome/free-solid-svg-icons';
 import {IPublicUtilityMonthPayments} from 'Models/PublicUtilityPayments';
 import {FormGroup} from 'Common/BuildingBlocks/FormGroup/FormGroup';
 import { IAbstractFuel, IAbstractOption } from 'Models/Common';
@@ -14,6 +12,7 @@ import {EModalMode} from 'Enums/Modal'
 import {PublicUtilityPaymentsActionPanel} from './PublicUtilityPaymentsActionsPanel';
 import {Input} from 'Common/BuildingBlocks/Input/Input';
 import isEmpty from 'lodash.isempty';
+import { Add, BulbIcon, Check, FireIcon, WaterValveIcon } from 'Common/BuildingBlocks/Icon';
 
 /**
  * Модель собственных свойств компонента.
@@ -292,7 +291,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                 <div className="public-utility-payments-modal__resource">
 
                     <div className="fields-block__field-icon">
-                        <FontAwesomeIcon icon={faLightbulb} title={electricity.subheader as string}/>
+                        <BulbIcon />
                     </div>
 
                     <div className="fields-block__inputs-container">
@@ -330,7 +329,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                 <div className="public-utility-payments-modal__resource">
 
                     <div className="fields-block__field-icon">
-                        <FontAwesomeIcon icon={faFire} title={gas.subheader as string}/>
+                        <FireIcon />
                     </div>
 
                     <div className="fields-block__inputs-container">
@@ -368,7 +367,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                 <div className="fields-block public-utility-payments-modal__resource">
 
                     <div className="fields-block__field-icon">
-                        <FontAwesomeIcon icon={faWater} title={water.subheader as string}/>
+                        <WaterValveIcon />
                     </div>
 
                     <div className="fields-block__inputs-container">
@@ -486,7 +485,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                         <p className="mb-0">Тарифы</p>
                     </div>
                     <div className="row mt-1">
-                        <FontAwesomeIcon className="mr-1" icon={faFire}/>
+                        <FireIcon/>
                         {Input({
                             className: 'rate-input form-control',
                             value: gas?.rate ?? null,
@@ -495,7 +494,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                         })}
                     </div>
                     <div className="row mt-1">
-                        <FontAwesomeIcon className="mr-1" icon={faLightbulb}/>
+                        <BulbIcon/>
                         {Input({
                             className: 'rate-input form-control',
                             value: electricity?.rate ?? null,
@@ -504,7 +503,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                         })}
                     </div>
                     <div className="row mt-1">
-                        <FontAwesomeIcon className="mr-1" icon={faWater}/>
+                        <WaterValveIcon />
                         {Input({
                             className: 'rate-input form-control',
                             value: water?.rate ?? null,
@@ -525,7 +524,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                     className="btn btn-success"
                     onClick={this.handleSave}
                 >
-                    <FontAwesomeIcon className="mr-1" icon={faCheck}/>
+                    <Check />
                     <span>Сохранить</span>
                 </button>
             </React.Fragment>
@@ -582,9 +581,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                                 onClick={this.handleOpenAddModal}
                                 tabIndex={1}
                             >
-                                <FontAwesomeIcon 
-                                    icon={faPlus}
-                                />
+                                <Add />
                             </button>
 
                             <button
@@ -593,9 +590,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                                 onClick={() => onRefreshData(showedYear)}
                                 tabIndex={2}
                             >
-                                <FontAwesomeIcon 
-                                    icon={faSync}
-                                />
+                                <p>faSync</p>
                             </button>
                         </div>
                     </div>
