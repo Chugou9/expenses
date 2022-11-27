@@ -12,7 +12,7 @@ import {EModalMode} from 'Enums/Modal'
 import {PublicUtilityPaymentsActionPanel} from './PublicUtilityPaymentsActionsPanel';
 import {Input} from 'Common/BuildingBlocks/Input/Input';
 import isEmpty from 'lodash.isempty';
-import { Add, BulbIcon, Check, FireIcon, WaterValveIcon } from 'Common/BuildingBlocks/Icon';
+import { Add, BulbIcon, Check, FireIcon, Sync, WaterValveIcon } from 'Common/BuildingBlocks/Icon';
 
 /**
  * Модель собственных свойств компонента.
@@ -590,7 +590,7 @@ export class PublicUtilityPaymentsForm extends React.PureComponent<IOwnProps, IS
                                 onClick={() => onRefreshData(showedYear)}
                                 tabIndex={2}
                             >
-                                <p>faSync</p>
+                                <Sync/>
                             </button>
                         </div>
                     </div>

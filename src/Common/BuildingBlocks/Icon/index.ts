@@ -13,3 +13,4 @@ export {Numbers} from './Numbers';
 export {Cross} from './Cross';
 export {Icon} from './Icon';
 export {Wallet} from './Wallet';
+export {Update as Sync} from './Update';
